@@ -3,7 +3,7 @@ import { Offer } from '../../mocks/offers.ts';
 
 type OfferCardProps = {
   offer: Offer;
-  onHover: (offer: Offer) => void;
+  onHover: (offer: Offer | null) => void;
 };
 
 export default function OfferCard({ offer, onHover }: OfferCardProps): JSX.Element {
@@ -13,6 +13,7 @@ export default function OfferCard({ offer, onHover }: OfferCardProps): JSX.Eleme
     <article
       className="cities__card place-card"
       onMouseEnter={() => onHover(offer)}
+      onMouseLeave={() => onHover(null)}
     >
       {isPremium && (
         <div className="place-card__mark">
