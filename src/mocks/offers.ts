@@ -44,7 +44,7 @@ export const offers: Offer[] = [
     image: 'img/room.jpg',
     isPremium: false,
     isFavorite: true,
-    city: 'Amsterdam', // Добавлено
+    city: 'Amsterdam',
     location: {
       latitude: 52.369553943508,
       longitude: 4.85309666406198,
@@ -78,10 +78,10 @@ export const offers: Offer[] = [
     image: 'img/apartment-03.jpg',
     isPremium: false,
     isFavorite: true,
-    city: 'Cologne',
+    city: 'Amsterdam',
     location: {
-      latitude: 50.937531,
-      longitude: 6.960279,
+      latitude: 52.3809553943508,
+      longitude: 4.939309666406198,
       zoom: 8,
     },
   },
