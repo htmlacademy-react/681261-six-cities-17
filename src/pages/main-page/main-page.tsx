@@ -1,5 +1,10 @@
 import { Offer } from '../../mocks/offers.ts';
 import OfferList from '../../components/offer/offer-list.tsx';
+import Map from '../../components/map/map.tsx';
+import { city } from '../../mocks/city.ts';
+import { points } from '../../mocks/points.ts';
+import { useState } from 'react';
+import { Point } from '../../types.ts';
 
 type MainPageProps = {
   offers: Offer[];
@@ -7,6 +12,20 @@ type MainPageProps = {
 
 export default function MainPage({ offers }: MainPageProps): JSX.Element {
   const count = 4;
+  const [selectedPoint, setSelectedPoint] = useState<Point | undefined>(undefined);
+
+  function onListItemHoverHandler(offer: Offer | null): void {
+    if (offer) {
+      const point: Point = {
+        title:offer.title,
+        lat: offer.location.latitude,
+        lng: offer.location.longitude,
+      };
+      setSelectedPoint(point);
+    } else {
+      setSelectedPoint(undefined);
+    }
+  }
   return (
     <div>
       <div className="page page--gray page--main">
@@ -97,10 +116,17 @@ export default function MainPage({ offers }: MainPageProps): JSX.Element {
                     <li className="places__option" tabIndex={0}>Top rated first</li>
                   </ul>
                 </form>
-                <OfferList offers={offers} />
+                <OfferList
+                  offers={offers}
+                  onListItemHover={onListItemHoverHandler}
+                />
               </section>
               <div className="cities__right-section">
-                <section className="cities__map map"></section>
+                <Map
+                  city={city}
+                  points={points}
+                  selectedPoint={selectedPoint}
+                />
               </div>
             </div>
           </div>
