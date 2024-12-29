@@ -1,13 +1,14 @@
-import {Offer} from '../../mocks/offers.ts';
+import { Offer } from '../../mocks/offers.ts';
 import OfferCard from './offer-card.tsx';
 import { useState } from 'react';
 
 type OfferListProps = {
   offers: Offer[];
   onListItemHover: (offer: Offer | null) => void;
+  className?: string;
 };
 
-export default function OfferList({ offers, onListItemHover }: OfferListProps): JSX.Element {
+export default function OfferList({ offers, onListItemHover, className = '' }: OfferListProps): JSX.Element {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setActiveCard] = useState<Offer | null>(null);
 
@@ -16,8 +17,10 @@ export default function OfferList({ offers, onListItemHover }: OfferListProps): 
     onListItemHover(offer);
   }
 
+  const combinedClassName = `cities__places-list places__list tabs__content ${className}`.trim();
+
   return (
-    <div className="cities__places-list places__list tabs__content">
+    <div className={combinedClassName}>
       {offers.map((offer) => (
         <OfferCard
           key={offer.id}
@@ -28,4 +31,3 @@ export default function OfferList({ offers, onListItemHover }: OfferListProps): 
     </div>
   );
 }
-
