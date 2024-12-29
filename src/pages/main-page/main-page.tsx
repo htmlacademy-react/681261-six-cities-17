@@ -126,6 +126,7 @@ export default function MainPage({ offers }: MainPageProps): JSX.Element {
                   city={city}
                   points={points}
                   selectedPoint={selectedPoint}
+                  height="100vh"
                 />
               </div>
             </div>
