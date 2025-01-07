@@ -2,8 +2,7 @@ import OfferList from '../../components/offer/offer-list.tsx';
 import Map from '../../components/map/map.tsx';
 import { city } from '../../mocks/city.ts';
 import { points } from '../../mocks/points.ts';
-import {useMemo, useState} from 'react';
-import {Offer, Point, SortOption} from '../../types.ts';
+import { Offer, Point, SortOption } from '../../types.ts';
 import LocationsList from '../../components/locations-list/locations-list.tsx';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
@@ -12,11 +11,13 @@ import PlacesSorting from '../../components/places-sorting/places-sorting.tsx';
 import { SortOptions } from '../../constant.ts';
 import { useAppDispatch } from '../../hooks/useDispatch.ts';
 import NoPlaces from '../../components/no-places/no-places.tsx';
+import Header from '../../components/header/header.tsx';
+import { useState, useMemo } from 'react';
 
 export default function MainPage(): JSX.Element {
   const dispatch = useAppDispatch();
 
-  const count = 4;
+  const favoriteCount = 4;
   const [selectedPoint, setSelectedPoint] = useState<Point | undefined>(undefined);
   const [currentSort, setCurrentSort] = useState<SortOption>(SortOptions.Popular);
 
@@ -50,7 +51,7 @@ export default function MainPage(): JSX.Element {
   function onListItemHoverHandler(offer: Offer | null): void {
     if (offer) {
       const point: Point = {
-        title:offer.title,
+        title: offer.title,
         lat: offer.location.latitude,
         lng: offer.location.longitude,
       };
@@ -62,39 +63,17 @@ export default function MainPage(): JSX.Element {
 
   const hasOffers = offersByCity.length > 0;
 
+  const userEmail = 'Oliver.conner@gmail.com';
+
   return (
     <div>
       <div className="page page--gray page--main">
-        <header className="header">
-          <div className="container">
-            <div className="header__wrapper">
-              <div className="header__left">
-                <a className="header__logo-link header__logo-link--active">
-                  <img className="header__logo" src="img/logo.svg" alt="6 cities logo" width="81" height="41"/>
-                </a>
-              </div>
-              <nav className="header__nav">
-                <ul className="header__nav-list">
-                  <li className="header__nav-item user">
-                    <a className="header__nav-link header__nav-link--profile" href="#">
-                      <div className="header__avatar-wrapper user__avatar-wrapper">
-                      </div>
-                      <span className="header__user-name user__name">Oliver.conner@gmail.com</span>
-                      <span className="header__favorite-count">{count}</span>
-                    </a>
-                  </li>
-                  <li className="header__nav-item">
-                    <a className="header__nav-link" href="#">
-                      <span className="header__signout">Sign out</span>
-                    </a>
-                  </li>
-                </ul>
-              </nav>
-            </div>
-          </div>
-        </header>
+        <Header
+          userEmail={userEmail}
+          favoriteCount={favoriteCount}
+        />
 
-        <main className="page__main page__main--index">
+        <main className={`page__main page__main--index ${!hasOffers ? 'page__main--index-empty' : ''}`}>
           <h1 className="visually-hidden">Cities</h1>
 
           <LocationsList
@@ -110,8 +89,14 @@ export default function MainPage(): JSX.Element {
                   <b className="places__found">
                     {offersByCity.length} {offersByCity.length === 1 ? 'place' : 'places'} to stay in {activeCity}
                   </b>
-                  <PlacesSorting currentSort={currentSort} onSortChange={handleSortChange}/>
-                  <OfferList offers={sortedOffers} onListItemHover={onListItemHoverHandler}/>
+                  <PlacesSorting
+                    currentSort={currentSort}
+                    onSortChange={handleSortChange}
+                  />
+                  <OfferList
+                    offers={sortedOffers}
+                    onListItemHover={onListItemHoverHandler}
+                  />
                 </section>
                 <div className="cities__right-section">
                   <Map
@@ -123,7 +108,7 @@ export default function MainPage(): JSX.Element {
                 </div>
               </div>
             ) : (
-              <NoPlaces city={activeCity}/>
+              <NoPlaces city={activeCity} />
             )}
           </div>
         </main>
