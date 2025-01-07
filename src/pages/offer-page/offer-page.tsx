@@ -8,8 +8,7 @@ import { pointsNearBy } from '../../mocks/points.ts';
 import Map from '../../components/map/map.tsx';
 import OfferList from '../../components/offer/offer-list.tsx';
 import { offersNearBy } from '../../mocks/offersNearBy.ts';
-import { Point } from '../../types.ts';
-import { Offer } from '../../mocks/offers.ts';
+import {Offer, Point} from '../../types.ts';
 
 export default function OfferPage(): JSX.Element {
   const [comments, setComments] = useState<CommentItemType[]>(mockComments);

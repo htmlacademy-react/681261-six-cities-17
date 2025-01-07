@@ -1,20 +1,4 @@
-export type Offer = {
-  id: string;
-  title: string;
-  description: string;
-  price: number;
-  rating: number;
-  type: string;
-  image: string;
-  isPremium: boolean;
-  isFavorite: boolean;
-  city: string;
-  location: {
-    latitude: number;
-    longitude: number;
-    zoom: number;
-  };
-};
+import { Offer } from '../types.ts';
 
 export const offers: Offer[] = [
   {
@@ -79,6 +63,23 @@ export const offers: Offer[] = [
     isPremium: false,
     isFavorite: true,
     city: 'Amsterdam',
+    location: {
+      latitude: 52.3809553943508,
+      longitude: 4.939309666406198,
+      zoom: 8,
+    },
+  },
+  {
+    id: '4',
+    title: 'Nice, cozy, warm big bed apartment',
+    description: 'The apartment is fully furnished and located near the park.',
+    price: 180,
+    rating: 4.7,
+    type: 'Apartment',
+    image: 'img/apartment-03.jpg',
+    isPremium: false,
+    isFavorite: true,
+    city: 'Paris',
     location: {
       latitude: 52.3809553943508,
       longitude: 4.939309666406198,

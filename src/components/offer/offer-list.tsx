@@ -1,6 +1,6 @@
-import { Offer } from '../../mocks/offers.ts';
 import OfferCard from './offer-card.tsx';
 import { useState } from 'react';
+import { Offer } from '../../types.ts';
 
 type OfferListProps = {
   offers: Offer[];
