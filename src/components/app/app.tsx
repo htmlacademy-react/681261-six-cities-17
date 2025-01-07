@@ -6,17 +6,12 @@ import FavoritesPage from '../../pages/favorites-page/favorites-page.tsx';
 import OfferPage from '../../pages/offer-page/offer-page.tsx';
 import NotFoundPage from '../../pages/404/404.tsx';
 import PrivateRoute from '../private-route/private-route.tsx';
-import { Offer } from '../../mocks/offers.ts';
 
-type AppProps = {
-  offers: Offer[];
-}
-
-export default function App({ offers }: AppProps): JSX.Element {
+export default function App(): JSX.Element {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path={RoutePath.Main} element={<MainPage offers={offers} />} />
+        <Route path={RoutePath.Main} element={<MainPage/>} />
         <Route path={RoutePath.Login} element={<LoginPage />} />
         <Route path={RoutePath.Offer} element={<OfferPage />} />
         <Route path="*" element={<NotFoundPage />} />
@@ -25,7 +20,7 @@ export default function App({ offers }: AppProps): JSX.Element {
           path={RoutePath.Favorites}
           element={
             <PrivateRoute authStatus={LoginStatus.NotAuth}>
-              <FavoritesPage offers={offers} />
+              <FavoritesPage/>
             </PrivateRoute>
           }
         />

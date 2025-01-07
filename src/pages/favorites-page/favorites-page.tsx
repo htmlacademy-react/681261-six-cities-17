@@ -1,11 +1,10 @@
-import { Offer } from '../../mocks/offers';
 import FavoritesList from '../../components/favorites/favorites-list.tsx';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store';
 
-type FavoritesPageProps = {
-  offers: Offer[];
-};
+export default function FavoritesPage(): JSX.Element {
+  const offers = useSelector((state: RootState) => state.offers);
 
-export default function FavoritesPage({ offers }: FavoritesPageProps): JSX.Element {
   const favoriteCount = offers.length;
 
   return (
