@@ -1,4 +1,4 @@
-import { Offer } from '../../mocks/offers';
+import { Offer } from '../../types.ts';
 
 type FavoritesCardProps = {
   offer: Offer;
