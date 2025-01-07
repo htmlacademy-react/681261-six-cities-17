@@ -1,5 +1,5 @@
-import { Offer } from '../../mocks/offers';
 import FavoritesCard from './favorites-card.tsx';
+import { Offer } from '../../types.ts';
 
 type FavoritesListProps = {
   offers: Offer[];
