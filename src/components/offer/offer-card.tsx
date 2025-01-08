@@ -7,7 +7,7 @@ type OfferCardProps = {
 };
 
 export default function OfferCard({ offer, onHover }: OfferCardProps): JSX.Element {
-  const { id, title, price, image, type, rating, isPremium } = offer;
+  const { id, title, price, previewImage, type, rating, isPremium } = offer;
 
   return (
     <article
@@ -24,7 +24,7 @@ export default function OfferCard({ offer, onHover }: OfferCardProps): JSX.Eleme
         <Link to={`/offer/${id}`}>
           <img
             className="place-card__image"
-            src={image}
+            src={previewImage}
             width="260"
             height="200"
             alt={title}

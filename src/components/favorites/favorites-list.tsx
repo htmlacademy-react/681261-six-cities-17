@@ -7,10 +7,10 @@ type FavoritesListProps = {
 
 export default function FavoritesList({ offers }: FavoritesListProps) {
   const groupedOffers = offers.reduce<Record<string, Offer[]>>((acc, offer) => {
-    if (!acc[offer.city]) {
-      acc[offer.city] = [];
+    if (!acc[offer.city.name]) {
+      acc[offer.city.name] = [];
     }
-    acc[offer.city].push(offer);
+    acc[offer.city.name].push(offer);
     return acc;
   }, {});
 
