@@ -1,16 +1,22 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { CITIES } from '../constant.ts';
-import {changeCity, loadOffers} from './actions.ts';
+import { changeCity, setOffers, setOffersLoadingState } from './actions.ts';
 import { Offer } from '../types.ts';
 
-interface State {
+export interface State {
   activeCity: string;
   offers: Offer[];
+  loadingState: {
+    offers: boolean;
+  };
 }
 
 const initialState: State = {
   activeCity: CITIES[0],
-  offers: []
+  offers: [],
+  loadingState: {
+    offers: false
+  }
 };
 
 export const reducer = createReducer(initialState, (builder) => {
@@ -18,7 +24,10 @@ export const reducer = createReducer(initialState, (builder) => {
     .addCase(changeCity, (state, action) => {
       state.activeCity = action.payload;
     })
-    .addCase(loadOffers, (state, action) => {
+    .addCase(setOffers, (state, action) => {
       state.offers = action.payload;
+    })
+    .addCase(setOffersLoadingState, (state, action) => {
+      state.loadingState.offers = action.payload;
     });
 });

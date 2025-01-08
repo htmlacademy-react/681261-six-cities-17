@@ -18,17 +18,23 @@ export type SortOption = 'Popular' | 'Price: low to high' | 'Price: high to low'
 export type Offer = {
   id: string;
   title: string;
-  description: string;
-  price: number;
-  rating: number;
   type: string;
-  image: string;
-  isPremium: boolean;
-  isFavorite: boolean;
-  city: string;
+  price: number;
+  city: {
+    name: string;
+    location: {
+      latitude: number;
+      longitude: number;
+      zoom: number;
+    };
+  };
   location: {
     latitude: number;
     longitude: number;
     zoom: number;
   };
+  isFavorite: boolean;
+  isPremium: boolean;
+  rating: number;
+  previewImage: string;
 };
