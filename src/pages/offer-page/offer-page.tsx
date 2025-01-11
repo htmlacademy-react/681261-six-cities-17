@@ -7,12 +7,15 @@ import { city } from '../../mocks/city.ts';
 import { pointsNearBy } from '../../mocks/points.ts';
 import Map from '../../components/map/map.tsx';
 import OfferList from '../../components/offer/offer-list.tsx';
-import { offersNearBy } from '../../mocks/offersNearBy.ts';
 import {Offer, Point} from '../../types.ts';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../store';
 
 export default function OfferPage(): JSX.Element {
   const [comments, setComments] = useState<CommentItemType[]>(mockComments);
   const [selectedPoint, setSelectedPoint] = useState<Point | undefined>(undefined);
+
+  const offers = useSelector((state: RootState) => state.offers);
 
   const handleCommentSubmit = (rating: number, commentText: string) => {
     const newComment: CommentItemType = {
@@ -215,7 +218,7 @@ export default function OfferPage(): JSX.Element {
             <h2 className="near-places__title">Other places in the neighbourhood</h2>
             <OfferList
               className="near-places__list"
-              offers={offersNearBy}
+              offers={offers}
               onListItemHover={onListItemHoverHandler}
             />
           </section>
