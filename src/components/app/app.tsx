@@ -1,13 +1,17 @@
 import MainPage from '../../pages/main-page/main-page.tsx';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { LoginStatus, RoutePath } from '../../constant.ts';
+import { RoutePath } from '../../constant.ts';
 import LoginPage from '../../pages/login-page/login-page.tsx';
 import FavoritesPage from '../../pages/favorites-page/favorites-page.tsx';
 import OfferPage from '../../pages/offer-page/offer-page.tsx';
 import NotFoundPage from '../../pages/404/404.tsx';
 import PrivateRoute from '../private-route/private-route.tsx';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../store';
 
 export default function App(): JSX.Element {
+  const authStatus = useSelector((state: RootState) => state.authorizationStatus);
+
   return (
     <BrowserRouter>
       <Routes>
@@ -19,7 +23,7 @@ export default function App(): JSX.Element {
         <Route
           path={RoutePath.Favorites}
           element={
-            <PrivateRoute authStatus={LoginStatus.NotAuth}>
+            <PrivateRoute authStatus={authStatus}>
               <FavoritesPage/>
             </PrivateRoute>
           }

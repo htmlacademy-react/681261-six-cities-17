@@ -16,7 +16,7 @@ export default function FavoritesCard({ offer }: FavoritesCardProps) {
         <a href="#">
           <img
             className="place-card__image"
-            src={offer.image}
+            src={offer.previewImage}
             width="150"
             height="110"
             alt="Place image"
