@@ -1,3 +1,5 @@
 export const API_ROUTES = {
-  GetOfferList: '/offers'
+  GetOfferList: '/offers',
+  Login: '/login',
+  Logout: '/logout'
 };

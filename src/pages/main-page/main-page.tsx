@@ -20,7 +20,6 @@ import { SortOptions } from '../../constant.ts';
 export default function MainPage(): JSX.Element {
   const dispatch = useAppDispatch();
 
-  const favoriteCount = 4;
   const [selectedPoint, setSelectedPoint] = useState<Point | undefined>(undefined);
   const [currentSort, setCurrentSort] = useState<SortOption>(SortOptions.Popular);
 
@@ -67,9 +66,6 @@ export default function MainPage(): JSX.Element {
   }
 
   const hasOffers = offersByCity.length > 0;
-
-  const userEmail = 'Oliver.conner@gmail.com';
-
   let content: JSX.Element;
 
   if (loadingOffers) {
@@ -112,10 +108,7 @@ export default function MainPage(): JSX.Element {
   return (
     <div>
       <div className="page page--gray page--main">
-        <Header
-          userEmail={userEmail}
-          favoriteCount={favoriteCount}
-        />
+        <Header/>
 
         <main className={`page__main page__main--index ${!hasOffers ? 'page__main--index-empty' : ''}`}>
           <h1 className="visually-hidden">Cities</h1>
