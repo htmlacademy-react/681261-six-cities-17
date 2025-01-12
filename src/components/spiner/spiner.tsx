@@ -16,5 +16,9 @@ export default function LoadingSpinner({ size = 50, color = '#00aaff' }: Loading
     animation: 'spin 1s linear infinite',
   };
 
-  return <div style={spinnerStyle} role="status" aria-label="Загрузка" />;
+  return (
+    <div className="loadingSpinnerContainer">
+      <div style={spinnerStyle} role="status" aria-label="Загрузка" />;
+    </div>
+  );
 }

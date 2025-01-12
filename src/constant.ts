@@ -3,6 +3,7 @@ export enum RoutePath {
   Login = '/login',
   Favorites = '/favorites',
   Offer = '/offer/:id',
+  NotFound = '/404',
 }
 
 export enum LoginStatus {

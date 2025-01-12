@@ -12,15 +12,13 @@ import Map from '../../components/map/map.tsx';
 import NoPlaces from '../../components/no-places/no-places.tsx';
 import LoadingSpinner from '../../components/spiner/spiner.tsx';
 
-import { city } from '../../mocks/city.ts';
-import { points } from '../../mocks/points.ts';
-import { Offer, Point, SortOption } from '../../types.ts';
+import {City, Offer, SortOption} from '../../types.ts';
 import { SortOptions } from '../../constant.ts';
 
 export default function MainPage(): JSX.Element {
   const dispatch = useAppDispatch();
 
-  const [selectedPoint, setSelectedPoint] = useState<Point | undefined>(undefined);
+  const [selectedPoint, setSelectedPoint] = useState<City | undefined>(undefined);
   const [currentSort, setCurrentSort] = useState<SortOption>(SortOptions.Popular);
 
   const activeCity = useSelector((state: RootState) => state.activeCity);
@@ -28,6 +26,11 @@ export default function MainPage(): JSX.Element {
   const loadingOffers = useSelector((state: RootState) => state.loadingState.offers);
 
   const offersByCity = offers.filter((offer) => offer.city.name === activeCity);
+  const pointsForMap: City[] = offersByCity.map((offer) => ({
+    id: offer.id,
+    name: offer.title,
+    location: offer.location,
+  }));
 
   const sortedOffers = useMemo(() => {
     const sorted = [...offersByCity];
@@ -54,10 +57,10 @@ export default function MainPage(): JSX.Element {
 
   function onListItemHoverHandler(offer: Offer | null): void {
     if (offer) {
-      const point: Point = {
-        title: offer.title,
-        lat: offer.location.latitude,
-        lng: offer.location.longitude,
+      const point: City = {
+        id: offer.id,
+        name: offer.title,
+        location: offer.location
       };
       setSelectedPoint(point);
     } else {
@@ -93,8 +96,7 @@ export default function MainPage(): JSX.Element {
         </section>
         <div className="cities__right-section">
           <Map
-            city={city}
-            points={points}
+            points={pointsForMap}
             selectedPoint={selectedPoint}
             height="100vh"
           />

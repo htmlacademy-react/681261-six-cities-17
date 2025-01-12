@@ -1,23 +1,31 @@
 import { useEffect, useState, MutableRefObject, useRef } from 'react';
-import { Map, TileLayer } from 'leaflet';
-import { City } from '../types.ts';
-import { DEFAULT_MAP_ZOOM } from '../constant.ts';
+import { Map, TileLayer, LatLngBounds } from 'leaflet';
+import {City} from '../types.ts';
 
 function useMap(
   mapRef: MutableRefObject<HTMLElement | null>,
-  city: City
+  points: City[]
 ): Map | null {
   const [map, setMap] = useState<Map | null>(null);
   const isRenderedRef = useRef<boolean>(false);
 
   useEffect(() => {
     if (mapRef.current !== null && !isRenderedRef.current) {
+      const bounds = points.reduce<LatLngBounds | null>((acc, point) => {
+        const { latitude, longitude } = point.location;
+        if (!acc) {
+          return new LatLngBounds([latitude, longitude], [latitude, longitude]);
+        }
+        acc.extend([latitude, longitude]);
+        return acc;
+      }, null);
+
+      const center = bounds ? bounds.getCenter() : { lat: 0, lng: 0 };
+      const zoom = bounds ? Math.min(...points.map((point) => point.location.zoom)) : 13;
+
       const instance = new Map(mapRef.current, {
-        center: {
-          lat: city.lat,
-          lng: city.lng
-        },
-        zoom: DEFAULT_MAP_ZOOM
+        center: center,
+        zoom: zoom
       });
 
       const layer = new TileLayer(
@@ -33,7 +41,24 @@ function useMap(
       setMap(instance);
       isRenderedRef.current = true;
     }
-  }, [mapRef, city]);
+  }, [mapRef, points]);
+
+  useEffect(() => {
+    if (map && points.length > 0) {
+      const bounds = points.reduce<LatLngBounds | null>((acc, point) => {
+        const { latitude, longitude } = point.location;
+        if (!acc) {
+          return new LatLngBounds([latitude, longitude], [latitude, longitude]);
+        }
+        acc.extend([latitude, longitude]);
+        return acc;
+      }, null);
+
+      if (bounds) {
+        map.fitBounds(bounds, { padding: [20, 20], maxZoom: 15 });
+      }
+    }
+  }, [map, points]);
 
   return map;
 }

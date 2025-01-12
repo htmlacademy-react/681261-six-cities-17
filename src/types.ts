@@ -1,17 +1,31 @@
-export type City = {
-  title: string;
-  lat: number;
-  lng: number;
+export interface City {
+  name: string;
+  id: string;
+  location: {
+    latitude: number;
+    longitude: number;
+    zoom: number;
+  };
+}
+
+export interface Location {
+  latitude: number;
+  longitude: number;
   zoom: number;
-};
+}
 
-export type Point = {
+export interface NearbyOffer {
+  id: string;
   title: string;
-  lat: number;
-  lng: number;
-};
-
-export type Points = Point[];
+  type: string;
+  price: number;
+  city: City;
+  location: Location;
+  isFavorite: boolean;
+  isPremium: boolean;
+  rating: number;
+  previewImage: string;
+}
 
 export type SortOption = 'Popular' | 'Price: low to high' | 'Price: high to low' | 'Top rated first';
 
@@ -22,17 +36,9 @@ export type Offer = {
   price: number;
   city: {
     name: string;
-    location: {
-      latitude: number;
-      longitude: number;
-      zoom: number;
-    };
+    location: Location;
   };
-  location: {
-    latitude: number;
-    longitude: number;
-    zoom: number;
-  };
+  location: Location;
   isFavorite: boolean;
   isPremium: boolean;
   rating: number;
@@ -46,3 +52,45 @@ export type UserInfo = {
   email: string;
   token: string;
 }
+
+export interface OfferDetails {
+  id: string;
+  title: string;
+  type: string;
+  price: number;
+  city: City;
+  location: Location;
+  isFavorite?: boolean;
+  isPremium: boolean;
+  rating: number;
+  description: string;
+  bedrooms: number;
+  goods: string[];
+  host: {
+    name: string;
+    avatarUrl: string;
+    isPro: boolean;
+  };
+  images: string[];
+  maxAdults: number;
+}
+
+export type CommentItem = {
+  id: string;
+  date: string;
+  user: UserInComment;
+  comment: string;
+  rating: number;
+}
+
+export type CommentPostPayload = {
+  comment: string;
+  rating: number;
+  offerId: string;
+}
+
+type UserInComment = {
+  name: string;
+  avatarUrl: string;
+  isPro: boolean;
+};
