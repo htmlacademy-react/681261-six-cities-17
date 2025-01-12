@@ -1,7 +1,14 @@
 import { createReducer } from '@reduxjs/toolkit';
 import {CITIES, LoginStatus} from '../constant.ts';
-import {changeCity, resetUserInfo, setAuthStatus, setOffers, setOffersLoadingState, setUserInfo} from './actions.ts';
-import {Offer, UserInfo} from '../types.ts';
+import {
+  changeCity,
+  resetUserInfo,
+  setAuthStatus, setLoadingState, setNearbyOffers, setComments,
+  setOfferDetails,
+  setOffers,
+  setUserInfo, addComment
+} from './actions.ts';
+import {CommentItem, NearbyOffer, Offer, OfferDetails, UserInfo} from '../types.ts';
 import {dropToken} from '../services/token.ts';
 
 export interface State {
@@ -10,8 +17,15 @@ export interface State {
   authorizationStatus: LoginStatus;
   loadingState: {
     offers: boolean;
+    offerDetails: boolean;
+    nearbyOffers: boolean;
+    offerComments: boolean;
+    sendingComment: boolean;
   };
-  user?: UserInfo | null;
+  user: UserInfo | null;
+  offerDetails: OfferDetails | null;
+  nearbyOffers: NearbyOffer[];
+  comments: CommentItem[];
 }
 
 const initialState: State = {
@@ -19,9 +33,16 @@ const initialState: State = {
   activeCity: CITIES[0],
   offers: [],
   loadingState: {
-    offers: false
+    offers: false,
+    offerDetails: false,
+    nearbyOffers: false,
+    offerComments: false,
+    sendingComment: false
   },
-  user: null
+  user: null,
+  offerDetails: null,
+  nearbyOffers: [],
+  comments: []
 };
 
 export const reducer = createReducer(initialState, (builder) => {
@@ -32,8 +53,9 @@ export const reducer = createReducer(initialState, (builder) => {
     .addCase(setOffers, (state, action) => {
       state.offers = action.payload;
     })
-    .addCase(setOffersLoadingState, (state, action) => {
-      state.loadingState.offers = action.payload;
+    .addCase(setLoadingState, (state, action) => {
+      const { field, value } = action.payload;
+      state.loadingState[field] = value;
     })
     .addCase(setAuthStatus, (state, action) => {
       state.authorizationStatus = action.payload;
@@ -44,5 +66,17 @@ export const reducer = createReducer(initialState, (builder) => {
     .addCase(resetUserInfo, (state) => {
       state.user = null;
       dropToken();
+    })
+    .addCase(setOfferDetails, (state, action) => {
+      state.offerDetails = action.payload;
+    })
+    .addCase(setNearbyOffers, (state, action) => {
+      state.nearbyOffers = action.payload;
+    })
+    .addCase(setComments, (state, action) => {
+      state.comments = action.payload;
+    })
+    .addCase(addComment, (state, action) => {
+      state.comments.push(action.payload);
     });
 });

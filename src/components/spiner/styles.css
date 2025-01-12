@@ -4,10 +4,11 @@
   }
 }
 
-.loading-spinner-container {
+.loadingSpinnerContainer {
   display: flex;
   justify-content: center;
   align-items: center;
+  padding-top: 30px;
   height: 100%;
   width: 100%;
 }
