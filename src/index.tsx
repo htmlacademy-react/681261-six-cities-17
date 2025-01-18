@@ -3,8 +3,9 @@ import ReactDOM from 'react-dom/client';
 import App from './components/app/app.tsx';
 import { store } from './store';
 import { Provider } from 'react-redux';
-import {loadOffers, login} from './store/async-actions.ts';
 import { ToastContainer } from 'react-toastify';
+import { loadOffers } from './store/slices/offer-slice.ts';
+import { login } from './store/slices/user-slice.ts';
 
 store.dispatch(loadOffers());
 store.dispatch(login());

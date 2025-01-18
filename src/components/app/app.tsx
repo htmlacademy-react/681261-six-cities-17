@@ -10,7 +10,7 @@ import {useSelector} from 'react-redux';
 import {RootState} from '../../store';
 
 export default function App(): JSX.Element {
-  const authStatus = useSelector((state: RootState) => state.authorizationStatus);
+  const authStatus = useSelector((state: RootState) => state.user.authorizationStatus);
 
   return (
     <BrowserRouter>

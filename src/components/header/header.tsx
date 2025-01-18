@@ -1,14 +1,13 @@
-import {useSelector} from 'react-redux';
-import {RootState} from '../../store';
-import {Link} from 'react-router-dom';
-import {LoginStatus, RoutePath} from '../../constant.ts';
-import {useAppDispatch} from '../../hooks/useDispatch.ts';
-import {resetUserInfo} from '../../store/actions.ts';
-import {logoutAction} from '../../store/async-actions.ts';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store';
+import { Link } from 'react-router-dom';
+import { LoginStatus, RoutePath } from '../../constant.ts';
+import { useAppDispatch } from '../../hooks/useDispatch.ts';
+import { logoutAction, resetUserInfo } from '../../store/slices/user-slice.ts';
 
 export default function Header(): JSX.Element {
   const dispatch = useAppDispatch();
-  const authStatus = useSelector((state: RootState) => state.authorizationStatus);
+  const authStatus = useSelector((state: RootState) => state.user.authorizationStatus);
   const user = useSelector((state: RootState) => state.user);
 
   const handleLogout = () => {
@@ -40,10 +39,8 @@ export default function Header(): JSX.Element {
                 <>
                   <li className="header__nav-item user">
                     <Link className="header__nav-link header__nav-link--profile" to={RoutePath.Favorites}>
-                      <div className="header__avatar-wrapper user__avatar-wrapper">
-                        {/* Здесь можно добавить аватар пользователя, если он есть */}
-                      </div>
-                      <span className="header__user-name user__name">{user.email}</span>
+                      <div className="header__avatar-wrapper user__avatar-wrapper"></div>
+                      <span className="header__user-name user__name">{user.user?.email}</span>
                       <span className="header__favorite-count">{0}</span>
                     </Link>
                   </li>

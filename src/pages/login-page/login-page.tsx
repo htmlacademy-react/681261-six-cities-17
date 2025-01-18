@@ -3,11 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { UserLoginPayload } from '../../store/types.ts';
 import { useNavigate } from 'react-router-dom';
 import { LoginStatus, RoutePath } from '../../constant.ts';
-import { loginAction } from '../../store/async-actions.ts';
 import { useAppDispatch } from '../../hooks/useDispatch.ts';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { toast } from 'react-toastify';
+import { loginAction } from '../../store/slices/user-slice.ts';
 
 export default function LoginPage(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -16,7 +16,7 @@ export default function LoginPage(): JSX.Element {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const authStatus = useSelector((state: RootState) => state.authorizationStatus);
+  const authStatus = useSelector((state: RootState) => state.user.authorizationStatus);
 
   useEffect(() => {
     if (authStatus === LoginStatus.Auth) {

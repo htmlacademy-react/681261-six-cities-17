@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
 
 export default function FavoritesPage(): JSX.Element {
-  const offers = useSelector((state: RootState) => state.offers);
+  const offers = useSelector((state: RootState) => state.offers.offers);
 
   const favoriteCount = offers.length;
 
