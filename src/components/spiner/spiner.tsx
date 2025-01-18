@@ -18,7 +18,7 @@ export default function LoadingSpinner({ size = 50, color = '#00aaff' }: Loading
 
   return (
     <div className="loadingSpinnerContainer">
-      <div style={spinnerStyle} role="status" aria-label="Загрузка" />;
+      <div style={spinnerStyle} role="status" aria-label="Загрузка" />
     </div>
   );
 }

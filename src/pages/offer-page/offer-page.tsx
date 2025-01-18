@@ -1,18 +1,23 @@
-import {useEffect, useState} from 'react';
-import {useNavigate, useParams} from 'react-router-dom';
-import {useSelector} from 'react-redux';
-import {RootState} from '../../store';
-import {useAppDispatch} from '../../hooks/useDispatch';
-import {fetchNearbyOffers, fetchOfferComments, fetchOfferDetails, sendComment} from '../../store/async-actions';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { AxiosError } from 'axios';
+
+import { RootState } from '../../store';
+import { useAppDispatch } from '../../hooks/useDispatch';
+
 import Header from '../../components/header/header.tsx';
 import LoadingSpinner from '../../components/spiner/spiner.tsx';
 import CommentList from '../../components/comment/comment-list.tsx';
 import CommentForm from '../../components/comment-form/comment-form.tsx';
 import Map from '../../components/map/map.tsx';
 import OfferList from '../../components/offer/offer-list.tsx';
-import {City, Offer, OfferDetails} from '../../types.ts';
-import {LoginStatus, RoutePath} from '../../constant.ts';
-import {AxiosError} from 'axios';
+
+import { City, Offer, OfferDetails } from '../../types.ts';
+import { LoginStatus, RoutePath } from '../../constant.ts';
+
+import { fetchNearbyOffers, fetchOfferDetails } from '../../store/slices/details-slice.ts';
+import { fetchOfferComments, sendComment } from '../../store/slices/comments-slice.ts';
 
 export default function OfferPage(): JSX.Element {
   const { id } = useParams<{ id: string }>();
@@ -21,12 +26,12 @@ export default function OfferPage(): JSX.Element {
 
   const [selectedPoint, setSelectedPoint] = useState<City | undefined>(undefined);
 
-  const isLoading = useSelector((state: RootState) => state.loadingState.offerDetails);
-  const offerDetails: OfferDetails | null = useSelector((state: RootState) => state.offerDetails);
-  const authorizationStatus = useSelector((state: RootState) => state.authorizationStatus);
-  const offers = useSelector((state: RootState) => state.offers);
-  const nearbyOffers = useSelector((state: RootState) => state.nearbyOffers);
-  const comments = useSelector((state: RootState) => state.comments);
+  const isLoading = useSelector((state: RootState) => state.details.loading);
+  const offerDetails: OfferDetails | null = useSelector((state: RootState) => state.details.offerDetails);
+  const authorizationStatus = useSelector((state: RootState) => state.user.authorizationStatus);
+  const offers = useSelector((state: RootState) => state.offers.offers);
+  const nearbyOffers = useSelector((state: RootState) => state.details.nearbyOffers);
+  const comments = useSelector((state: RootState) => state.comments.comments);
   const getMapPoints = (): City[] => {
     const nearByPoints: City[] = nearbyOffers.slice(0 , 3).map((item) => ({
       id: item.id,

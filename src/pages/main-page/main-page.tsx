@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { useAppDispatch } from '../../hooks/useDispatch';
-import { changeCity } from '../../store/actions';
+import { changeCity } from '../../store/slices/city-slice.ts';
 
 import Header from '../../components/header/header.tsx';
 import LocationsList from '../../components/locations-list/locations-list.tsx';
@@ -21,9 +21,9 @@ export default function MainPage(): JSX.Element {
   const [selectedPoint, setSelectedPoint] = useState<City | undefined>(undefined);
   const [currentSort, setCurrentSort] = useState<SortOption>(SortOptions.Popular);
 
-  const activeCity = useSelector((state: RootState) => state.activeCity);
-  const offers = useSelector((state: RootState) => state.offers);
-  const loadingOffers = useSelector((state: RootState) => state.loadingState.offers);
+  const activeCity = useSelector((state: RootState) => state.city.activeCity);
+  const offers = useSelector((state: RootState) => state.offers.offers);
+  const loadingOffers = useSelector((state: RootState) => state.offers.loading);
 
   const offersByCity = offers.filter((offer) => offer.city.name === activeCity);
   const pointsForMap: City[] = offersByCity.map((offer) => ({
