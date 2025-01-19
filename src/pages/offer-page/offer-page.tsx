@@ -18,6 +18,11 @@ import { LoginStatus, RoutePath } from '../../constant.ts';
 
 import { fetchNearbyOffers, fetchOfferDetails } from '../../store/slices/details-slice.ts';
 import { fetchOfferComments, sendComment } from '../../store/slices/comments-slice.ts';
+import FavoriteButton from '../../components/favorites/button.tsx';
+import {FavoritesEnvironment} from '../../components/favorites/types.ts';
+import {changeFavoriteStatus, updateFavoriteInFavorites} from '../../store/slices/favorites-slice.ts';
+import { updateFavoriteInOffersList } from '../../store/slices/offer-slice.ts';
+import { updateFavoriteInDetails } from '../../store/slices/details-slice.ts';
 
 export default function OfferPage(): JSX.Element {
   const { id } = useParams<{ id: string }>();
@@ -95,14 +100,21 @@ export default function OfferPage(): JSX.Element {
     }
   };
 
-  const handleFavoriteClick = () => {
+  const handleFavoriteClick = async () => {
     if (authorizationStatus !== LoginStatus.Auth) {
       navigate('/login');
       return;
     }
+
     if (offerDetails) {
-      // Dispatch действие для добавления/удаления из избранного
-      // dispatch(setFavorites(offerDetails.id));
+      const { isFavorite, id: offerId } = offerDetails;
+      const newStatus = isFavorite ? 0 : 1;
+
+      const updatedOffer = await dispatch(changeFavoriteStatus({ offerId, status: newStatus })).unwrap();
+
+      dispatch(updateFavoriteInOffersList(updatedOffer));
+      dispatch(updateFavoriteInFavorites(updatedOffer));
+      dispatch(updateFavoriteInDetails(updatedOffer));
     }
   };
 
@@ -159,16 +171,11 @@ export default function OfferPage(): JSX.Element {
               )}
               <div className="offer__name-wrapper">
                 <h1 className="offer__name">{title}</h1>
-                <button
-                  className={`offer__bookmark-button button ${isFavorite ? 'offer__bookmark-button--active' : ''}`}
-                  type="button"
-                  onClick={handleFavoriteClick}
-                >
-                  <svg className="offer__bookmark-icon" width="31" height="33">
-                    <use xlinkHref="#icon-bookmark"></use>
-                  </svg>
-                  <span className="visually-hidden">To bookmarks</span>
-                </button>
+                <FavoriteButton
+                  isFavorite={isFavorite ?? false}
+                  onFavoriteButtonClick={handleFavoriteClick}
+                  environment={FavoritesEnvironment.Details}
+                />
               </div>
               <div className="offer__rating rating">
                 <div className="offer__stars rating__stars">

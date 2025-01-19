@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import {createSlice, createAsyncThunk, PayloadAction} from '@reduxjs/toolkit';
 import { AxiosInstance } from 'axios';
 import { Offer } from '../../types';
 
@@ -17,7 +17,15 @@ const offersSlice = createSlice({
     loading: false,
     error: null as string | null,
   },
-  reducers: {},
+  reducers: {
+    updateFavoriteInOffersList(state, action: PayloadAction<Offer>) {
+      const index = state.offers.findIndex((item) => item.id === action.payload.id);
+      if (index !== -1) {
+        state.offers[index] = action.payload;
+      }
+    },
+
+  },
   extraReducers: (builder) => {
     builder
       .addCase(loadOffers.pending, (state) => {
@@ -36,3 +44,4 @@ const offersSlice = createSlice({
 });
 
 export default offersSlice.reducer;
+export const { updateFavoriteInOffersList } = offersSlice.actions;

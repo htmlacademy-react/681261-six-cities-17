@@ -1,6 +1,6 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { AxiosInstance } from 'axios';
-import { OfferDetails, NearbyOffer } from '../../types';
+import {OfferDetails, NearbyOffer, Offer} from '../../types';
 
 export const fetchOfferDetails = createAsyncThunk<OfferDetails, string, { extra: AxiosInstance }>(
   'details/fetchOfferDetails',
@@ -26,7 +26,13 @@ const detailsSlice = createSlice({
     loading: false,
     error: null as string | null,
   },
-  reducers: {},
+  reducers: {
+    updateFavoriteInDetails(state, action: PayloadAction<Offer>) {
+      if (state.offerDetails?.id === action.payload.id) {
+        state.offerDetails.isFavorite = action.payload.isFavorite;
+      }
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchOfferDetails.pending, (state) => {
@@ -55,3 +61,4 @@ const detailsSlice = createSlice({
 });
 
 export default detailsSlice.reducer;
+export const { updateFavoriteInDetails } = detailsSlice.actions;
