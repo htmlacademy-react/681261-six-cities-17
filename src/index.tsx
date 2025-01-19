@@ -6,9 +6,11 @@ import { Provider } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import { loadOffers } from './store/slices/offer-slice.ts';
 import { login } from './store/slices/user-slice.ts';
+import { fetchFavorites } from './store/slices/favorites-slice.ts';
 
 store.dispatch(loadOffers());
 store.dispatch(login());
+store.dispatch(fetchFavorites());
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement

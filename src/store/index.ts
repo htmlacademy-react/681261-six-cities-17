@@ -5,6 +5,7 @@ import citySlice from './slices/city-slice.ts';
 import offerSlice from './slices/offer-slice.ts';
 import detailsSlice from './slices/details-slice.ts';
 import commentsSlice from './slices/comments-slice.ts';
+import favoritesSlice from './slices/favorites-slice.ts';
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
@@ -18,6 +19,7 @@ export const store = configureStore({
     offers: offerSlice,
     details: detailsSlice,
     comments: commentsSlice,
+    favorites: favoritesSlice
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware({
     thunk: {

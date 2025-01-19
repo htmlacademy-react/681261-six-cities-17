@@ -1,5 +1,14 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '../../hooks/useDispatch';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store';
 import { Offer } from '../../types.ts';
+import { FavoritesEnvironment } from '../favorites/types.ts';
+import FavoriteButton from '../favorites/button.tsx';
+import {changeFavoriteStatus, updateFavoriteInFavorites} from '../../store/slices/favorites-slice.ts';
+import { updateFavoriteInOffersList } from '../../store/slices/offer-slice.ts';
+import { LoginStatus } from '../../constant.ts';
+import { updateFavoriteInDetails } from '../../store/slices/details-slice.ts';
 
 type OfferCardProps = {
   offer: Offer;
@@ -7,7 +16,26 @@ type OfferCardProps = {
 };
 
 export default function OfferCard({ offer, onHover }: OfferCardProps): JSX.Element {
-  const { id, title, price, previewImage, type, rating, isPremium } = offer;
+  const { id, title, price, previewImage, type, rating, isPremium, isFavorite } = offer;
+
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const authorizationStatus = useSelector((state: RootState) => state.user.authorizationStatus);
+
+  const handleFavoriteClick = async () => {
+    if (authorizationStatus !== LoginStatus.Auth) {
+      navigate('/login');
+      return;
+    }
+
+    const newStatus = isFavorite ? 0 : 1;
+
+    const updatedOffer = await dispatch(changeFavoriteStatus({ offerId: id, status: newStatus })).unwrap();
+
+    dispatch(updateFavoriteInOffersList(updatedOffer));
+    dispatch(updateFavoriteInFavorites(updatedOffer));
+    dispatch(updateFavoriteInDetails(updatedOffer));
+  };
 
   return (
     <article
@@ -37,12 +65,11 @@ export default function OfferCard({ offer, onHover }: OfferCardProps): JSX.Eleme
             <b className="place-card__price-value">&euro;{price}</b>
             <span className="place-card__price-text">&#47;&nbsp;night</span>
           </div>
-          <button className="place-card__bookmark-button button" type="button">
-            <svg className="place-card__bookmark-icon" width="18" height="19">
-              <use xlinkHref="#icon-bookmark"></use>
-            </svg>
-            <span className="visually-hidden">To bookmarks</span>
-          </button>
+          <FavoriteButton
+            isFavorite={isFavorite}
+            onFavoriteButtonClick={handleFavoriteClick}
+            environment={FavoritesEnvironment.Card}
+          />
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
