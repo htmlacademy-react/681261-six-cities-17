@@ -1,14 +1,14 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../../hooks/useDispatch';
+import { useAppDispatch } from '../../../../hooks/useDispatch.ts';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../store';
-import { Offer } from '../../types.ts';
-import { FavoritesEnvironment } from '../favorites/types.ts';
-import FavoriteButton from '../favorites/button.tsx';
-import {changeFavoriteStatus, updateFavoriteInFavorites} from '../../store/slices/favorites-slice.ts';
-import { updateFavoriteInOffersList } from '../../store/slices/offer-slice.ts';
-import { LoginStatus } from '../../constant.ts';
-import { updateFavoriteInDetails } from '../../store/slices/details-slice.ts';
+import { RootState } from '../../../../store';
+import { Offer } from '../../../../types.ts';
+import { FavoritesEnvironment } from '../../../favorites/types.ts';
+import FavoriteButton from '../../../favorites/components/button/button.tsx';
+import {changeFavoriteStatus, updateFavoriteInFavorites} from '../../../../store/slices/favorites.ts';
+import { updateFavoriteInOffersList } from '../../../../store/slices/offer.ts';
+import { LoginStatus } from '../../../../constant.ts';
+import { updateFavoriteInDetails } from '../../../../store/slices/details.ts';
 
 type OfferCardProps = {
   offer: Offer;
@@ -22,7 +22,7 @@ export default function OfferCard({ offer, onHover }: OfferCardProps): JSX.Eleme
   const navigate = useNavigate();
   const authorizationStatus = useSelector((state: RootState) => state.user.authorizationStatus);
 
-  const handleFavoriteClick = async () => {
+  const onFavoriteClick = async () => {
     if (authorizationStatus !== LoginStatus.Auth) {
       navigate('/login');
       return;
@@ -67,13 +67,13 @@ export default function OfferCard({ offer, onHover }: OfferCardProps): JSX.Eleme
           </div>
           <FavoriteButton
             isFavorite={isFavorite}
-            onFavoriteButtonClick={handleFavoriteClick}
+            onFavoriteButtonClick={onFavoriteClick}
             environment={FavoritesEnvironment.Card}
           />
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{ width: `${rating * 20}%` }}></span>
+            <span style={{width: `${Math.round(rating) * 20}%`}}></span>
             <span className="visually-hidden">Rating</span>
           </div>
         </div>

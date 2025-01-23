@@ -1,4 +1,4 @@
-import { FavoritesEnvironment } from './types.ts';
+import { FavoritesEnvironment } from '../../types.ts';
 
 type ButtonProps = {
   isFavorite: boolean;

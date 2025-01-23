@@ -1,6 +1,7 @@
 import {createSlice, createAsyncThunk, PayloadAction} from '@reduxjs/toolkit';
 import { AxiosInstance } from 'axios';
 import { Offer } from '../../types';
+import { SortOptions, SortOption } from '../../constant';
 
 export const loadOffers = createAsyncThunk<Offer[], void, { extra: AxiosInstance }>(
   'offers/loadOffers',
@@ -14,6 +15,7 @@ const offersSlice = createSlice({
   name: 'offers',
   initialState: {
     offers: [] as Offer[],
+    currentSort: SortOptions.Popular as SortOption,
     loading: false,
     error: null as string | null,
   },
@@ -24,7 +26,9 @@ const offersSlice = createSlice({
         state.offers[index] = action.payload;
       }
     },
-
+    setCurrentSort(state, action: PayloadAction<SortOption>) {
+      state.currentSort = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -44,4 +48,4 @@ const offersSlice = createSlice({
 });
 
 export default offersSlice.reducer;
-export const { updateFavoriteInOffersList } = offersSlice.actions;
+export const { updateFavoriteInOffersList, setCurrentSort } = offersSlice.actions;

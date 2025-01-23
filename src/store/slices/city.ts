@@ -9,7 +9,7 @@ const initialState: InitialState = {
   activeCity: CITIES[0]
 };
 
-const citySlice = createSlice({
+const city = createSlice({
   name: 'city',
   initialState,
   reducers: {
@@ -19,5 +19,5 @@ const citySlice = createSlice({
   },
 });
 
-export const { changeCity } = citySlice.actions;
-export default citySlice.reducer;
+export const { changeCity } = city.actions;
+export default city.reducer;

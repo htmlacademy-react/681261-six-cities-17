@@ -32,7 +32,7 @@ export const changeFavoriteStatus = createAsyncThunk<Offer, ChangeFavoriteStatus
   }
 );
 
-const favoritesSlice = createSlice({
+const favorites = createSlice({
   name: 'favorites',
   initialState,
   reducers: {
@@ -71,5 +71,5 @@ const favoritesSlice = createSlice({
   },
 });
 
-export default favoritesSlice.reducer;
-export const { updateFavoriteInFavorites } = favoritesSlice.actions;
+export default favorites.reducer;
+export const { updateFavoriteInFavorites } = favorites.actions;

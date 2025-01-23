@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 type CommentFormProps = {
-  onSubmit: (rating: number, comment: string) => Promise<void>; // Делаем onSubmit асинхронным
+  onSubmit: (rating: number, comment: string) => Promise<void>;
 };
 
 const ratingTitles: Record<number, string> = {

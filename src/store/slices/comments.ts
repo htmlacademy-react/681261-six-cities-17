@@ -18,7 +18,7 @@ export const sendComment = createAsyncThunk<CommentItem, CommentPostPayload, { e
   }
 );
 
-const commentsSlice = createSlice({
+const comments = createSlice({
   name: 'comments',
   initialState: {
     comments: [] as CommentItem[],
@@ -53,4 +53,4 @@ const commentsSlice = createSlice({
   },
 });
 
-export default commentsSlice.reducer;
+export default comments.reducer;
