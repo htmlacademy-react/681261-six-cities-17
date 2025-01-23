@@ -1,20 +1,22 @@
-import OfferCard from './offer-card.tsx';
+import OfferCard from './components/offer-card/offer-card.tsx';
 import { useState } from 'react';
 import { Offer } from '../../types.ts';
 
 type OfferListProps = {
   offers: Offer[];
-  onListItemHover: (offer: Offer | null) => void;
+  onListItemHover?: (offer: Offer | null) => void;
   className?: string;
 };
 
 export default function OfferList({ offers, onListItemHover, className = '' }: OfferListProps): JSX.Element {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, setActiveCard] = useState<Offer | null>(null);
+  const [, setActiveCard] = useState<Offer | null>(null);
 
   function onHoverHandler(offer: Offer | null): void {
     setActiveCard(offer);
-    onListItemHover(offer);
+
+    if (onListItemHover) {
+      onListItemHover(offer);
+    }
   }
 
   const combinedClassName = `cities__places-list places__list tabs__content ${className}`.trim();

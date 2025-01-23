@@ -18,7 +18,7 @@ export const fetchNearbyOffers = createAsyncThunk<NearbyOffer[], string, { extra
   }
 );
 
-const detailsSlice = createSlice({
+const details = createSlice({
   name: 'details',
   initialState: {
     offerDetails: null as OfferDetails | null,
@@ -43,7 +43,7 @@ const detailsSlice = createSlice({
         state.loading = false;
       })
       .addCase(fetchOfferDetails.rejected, (state, action) => {
-        state.error = action.error.message || 'Failed to fetch offer details';
+        state.error = action.error.message || 'Failed to fetch offer-list details';
         state.loading = false;
       })
       .addCase(fetchNearbyOffers.pending, (state) => {
@@ -60,5 +60,5 @@ const detailsSlice = createSlice({
   },
 });
 
-export default detailsSlice.reducer;
-export const { updateFavoriteInDetails } = detailsSlice.actions;
+export default details.reducer;
+export const { updateFavoriteInDetails } = details.actions;

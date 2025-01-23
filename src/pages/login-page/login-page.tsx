@@ -2,12 +2,14 @@ import Header from '../../components/header/header.tsx';
 import React, { useEffect, useState } from 'react';
 import { UserLoginPayload } from '../../store/types.ts';
 import { useNavigate } from 'react-router-dom';
-import { LoginStatus, RoutePath } from '../../constant.ts';
+import { LoginStatus, RoutePath, CITIES } from '../../constant.ts';
 import { useAppDispatch } from '../../hooks/useDispatch.ts';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../store';
 import { toast } from 'react-toastify';
-import { loginAction } from '../../store/slices/user-slice.ts';
+import { loginAction } from '../../store/slices/user.ts';
+import { changeCity } from '../../store/slices/city.ts';
+import { useMemo } from 'react';
+import { getAuthorizationStatus } from '../../store/selectors/user.ts';
 
 export default function LoginPage(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -16,7 +18,9 @@ export default function LoginPage(): JSX.Element {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const authStatus = useSelector((state: RootState) => state.user.authorizationStatus);
+  const authStatus = useSelector(getAuthorizationStatus);
+
+  const randomCity = useMemo(() => CITIES[Math.floor(Math.random() * CITIES.length)], []);
 
   useEffect(() => {
     if (authStatus === LoginStatus.Auth) {
@@ -52,9 +56,14 @@ export default function LoginPage(): JSX.Element {
       });
   };
 
+  const handleQuickNavigation = () => {
+    dispatch(changeCity(randomCity));
+    navigate(RoutePath.Main);
+  };
+
   return (
     <div className="page page--gray page--login">
-      <Header/>
+      <Header />
 
       <main className="page__main page__main--login">
         <div className="page__login-container container">
@@ -98,8 +107,11 @@ export default function LoginPage(): JSX.Element {
           </section>
           <section className="locations locations--login locations--current">
             <div className="locations__item">
-              <a className="locations__item-link" href="#">
-                <span>Amsterdam</span>
+              <a
+                className="locations__item-link"
+                onClick={handleQuickNavigation}
+              >
+                <span>{randomCity}</span>
               </a>
             </div>
           </section>

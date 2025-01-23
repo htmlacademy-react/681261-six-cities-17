@@ -7,20 +7,20 @@ import 'leaflet/dist/leaflet.css';
 
 type MapProps = {
   points: City[];
-  selectedPoint: City | undefined;
+  selectedPoint: City | null;
   height: string;
 };
 
 const defaultCustomIcon = new Icon({
   iconUrl: URL_MARKER_DEFAULT,
   iconSize: [40, 40],
-  iconAnchor: [20, 40]
+  iconAnchor: [20, 40],
 });
 
 const currentCustomIcon = new Icon({
   iconUrl: URL_MARKER_CURRENT,
   iconSize: [40, 40],
-  iconAnchor: [20, 40]
+  iconAnchor: [20, 40],
 });
 
 export default function Map(props: MapProps): JSX.Element {
@@ -32,19 +32,16 @@ export default function Map(props: MapProps): JSX.Element {
   useEffect(() => {
     if (map) {
       const markerLayer = layerGroup().addTo(map);
-      points.forEach((offer) => {
+
+      points.forEach((point) => {
+        const isSelected = selectedPoint !== null && point.id === selectedPoint.id;
+
         const marker = new Marker({
-          lat: offer.location.latitude,
-          lng: offer.location.longitude
+          lat: point.location.latitude,
+          lng: point.location.longitude,
         });
 
-        marker
-          .setIcon(
-            selectedPoint !== undefined && offer.id === selectedPoint.id
-              ? currentCustomIcon
-              : defaultCustomIcon
-          )
-          .addTo(markerLayer);
+        marker.setIcon(isSelected ? currentCustomIcon : defaultCustomIcon).addTo(markerLayer);
       });
 
       return () => {
@@ -57,10 +54,9 @@ export default function Map(props: MapProps): JSX.Element {
     <div
       style={{
         height,
-        width: '100%'
+        width: '100%',
       }}
       ref={mapRef}
-    >
-    </div>
+    />
   );
 }

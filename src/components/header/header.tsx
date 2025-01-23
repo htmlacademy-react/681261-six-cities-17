@@ -3,7 +3,7 @@ import { RootState } from '../../store';
 import { Link } from 'react-router-dom';
 import { LoginStatus, RoutePath } from '../../constant.ts';
 import { useAppDispatch } from '../../hooks/useDispatch.ts';
-import { logoutAction, resetUserInfo } from '../../store/slices/user-slice.ts';
+import { logoutAction, resetUserInfo } from '../../store/slices/user.ts';
 
 export default function Header(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -55,7 +55,7 @@ export default function Header(): JSX.Element {
                   </li>
                   <li className="header__nav-item">
                     <Link className="header__nav-link" to={RoutePath.Login} onClick={handleLogout}>
-                      <span className="header__login">Sign out</span>
+                      <span className="header__login">Log out</span>
                     </Link>
                   </li>
                 </>

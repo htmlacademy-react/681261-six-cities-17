@@ -1,28 +1,30 @@
-import { useState, useRef, useEffect } from 'react';
+import {useRef, useEffect, useState} from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { SortOption } from '../../types.ts';
-
-type PlacesSortingProps = {
-  currentSort: SortOption;
-  onSortChange: (sort: SortOption) => void;
-}
+import { getCurrentSort } from '../../store/selectors/offers.ts';
+import { setCurrentSort } from '../../store/slices/offer.ts';
+import { SortOptions } from '../../constant.ts';
 
 const sortOptions: SortOption[] = [
-  'Popular',
-  'Price: low to high',
-  'Price: high to low',
-  'Top rated first',
+  SortOptions.Popular,
+  SortOptions.LowToHigh,
+  SortOptions.HighToLow,
+  SortOptions.TopRated,
 ];
 
-export default function PlacesSorting({ currentSort, onSortChange }: PlacesSortingProps): JSX.Element {
-  const [isOpen, setIsOpen] = useState(false);
+export default function PlacesSorting(): JSX.Element {
+  const dispatch = useDispatch();
+  const currentSort = useSelector(getCurrentSort);
+
   const dropdownRef = useRef<HTMLFormElement>(null);
+  const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => {
     setIsOpen((prev) => !prev);
   };
 
   const handleOptionClick = (option: SortOption) => {
-    onSortChange(option);
+    dispatch(setCurrentSort(option));
     setIsOpen(false);
   };
 

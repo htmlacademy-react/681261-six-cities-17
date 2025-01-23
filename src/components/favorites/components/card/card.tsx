@@ -1,26 +1,26 @@
-import { useAppDispatch } from '../../hooks/useDispatch';
+import { useAppDispatch } from '../../../../hooks/useDispatch.ts';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { Offer } from '../../types.ts';
-import FavoriteButton from './button.tsx';
-import { FavoritesEnvironment } from './types.ts';
-import { changeFavoriteStatus } from '../../store/slices/favorites-slice.ts';
-import { updateFavoriteInFavorites } from '../../store/slices/favorites-slice.ts';
-import { LoginStatus } from '../../constant.ts';
-import { RootState } from '../../store';
-import { updateFavoriteInOffersList } from '../../store/slices/offer-slice.ts';
-import { updateFavoriteInDetails } from '../../store/slices/details-slice.ts';
+import { Offer } from '../../../../types.ts';
+import FavoriteButton from '../button/button.tsx';
+import { FavoritesEnvironment } from '../../types.ts';
+import { changeFavoriteStatus } from '../../../../store/slices/favorites.ts';
+import { updateFavoriteInFavorites } from '../../../../store/slices/favorites.ts';
+import { LoginStatus } from '../../../../constant.ts';
+import { RootState } from '../../../../store';
+import { updateFavoriteInOffersList } from '../../../../store/slices/offer.ts';
+import { updateFavoriteInDetails } from '../../../../store/slices/details.ts';
 
 type FavoritesCardProps = {
   offer: Offer;
 };
 
-export default function FavoritesCard({ offer }: FavoritesCardProps) {
+export default function Card({ offer }: FavoritesCardProps) {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const authorizationStatus = useSelector((state: RootState) => state.user.authorizationStatus);
 
-  const handleFavoriteClick = async () => {
+  const onFavoriteButtonClick = async () => {
     if (authorizationStatus !== LoginStatus.Auth) {
       navigate('/login');
       return;
@@ -63,7 +63,7 @@ export default function FavoritesCard({ offer }: FavoritesCardProps) {
           </div>
           <FavoriteButton
             isFavorite={offer.isFavorite}
-            onFavoriteButtonClick={handleFavoriteClick}
+            onFavoriteButtonClick={onFavoriteButtonClick}
             environment={FavoritesEnvironment.Card}
           />
         </div>
