@@ -1,11 +1,12 @@
-import FavoritesList from '../../components/favorites/favorites-list.tsx';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store';
+import Favorites from '../../components/favorites/favorites.tsx';
 import Header from '../../components/header/header.tsx';
-import FavoritesEmptyState from '../../components/favorites/empty-state.tsx';
+import FavoritesEmptyState from '../../components/favorites/components/empty-state/empty-state.tsx';
+
+import { useSelector } from 'react-redux';
+import { getFavorites } from '../../store/selectors/favorites.ts';
 
 export default function FavoritesPage(): JSX.Element {
-  const favorites = useSelector((state: RootState) => state.favorites.favorites);
+  const favorites = useSelector(getFavorites);
 
   if (favorites.length === 0) {
     return (
@@ -33,7 +34,7 @@ export default function FavoritesPage(): JSX.Element {
 
       <main className="page__main page__main--favorites">
         <div className="page__favorites-container container">
-          <FavoritesList offers={favorites} />
+          <Favorites offers={favorites} />
         </div>
       </main>
 

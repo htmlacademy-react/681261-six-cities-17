@@ -1,4 +1,4 @@
-import Comment from './comment.tsx';
+import Comment from '../comment/comment.tsx';
 import { CommentItem } from '../../types.ts';
 
 type CommentListProps = {

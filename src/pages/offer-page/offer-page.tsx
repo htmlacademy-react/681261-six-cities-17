@@ -1,81 +1,58 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { AxiosError } from 'axios';
 
 import { RootState } from '../../store';
 import { useAppDispatch } from '../../hooks/useDispatch';
 
 import Header from '../../components/header/header.tsx';
 import LoadingSpinner from '../../components/spiner/spiner.tsx';
-import CommentList from '../../components/comment/comment-list.tsx';
+import CommentList from '../../components/comment-list/comment-list.tsx';
 import CommentForm from '../../components/comment-form/comment-form.tsx';
 import Map from '../../components/map/map.tsx';
-import OfferList from '../../components/offer/offer-list.tsx';
+import OfferList from '../../components/offer-list/offer-list.tsx';
+import OfferGallery from '../../components/offer-gallery/offer-gallery.tsx';
 
-import { City, Offer, OfferDetails } from '../../types.ts';
-import { LoginStatus, RoutePath } from '../../constant.ts';
+import { LoginStatus } from '../../constant.ts';
 
-import { fetchNearbyOffers, fetchOfferDetails } from '../../store/slices/details-slice.ts';
-import { fetchOfferComments, sendComment } from '../../store/slices/comments-slice.ts';
-import FavoriteButton from '../../components/favorites/button.tsx';
-import {FavoritesEnvironment} from '../../components/favorites/types.ts';
-import {changeFavoriteStatus, updateFavoriteInFavorites} from '../../store/slices/favorites-slice.ts';
-import { updateFavoriteInOffersList } from '../../store/slices/offer-slice.ts';
-import { updateFavoriteInDetails } from '../../store/slices/details-slice.ts';
+import { fetchNearbyOffers, fetchOfferDetails } from '../../store/slices/details.ts';
+import { fetchOfferComments, sendComment } from '../../store/slices/comments.ts';
+import FavoriteButton from '../../components/favorites/components/button/button.tsx';
+import { FavoritesEnvironment } from '../../components/favorites/types.ts';
+import { changeFavoriteStatus, updateFavoriteInFavorites } from '../../store/slices/favorites.ts';
+import { updateFavoriteInOffersList } from '../../store/slices/offer.ts';
+import { updateFavoriteInDetails } from '../../store/slices/details.ts';
+import {
+  getLoadingState,
+  getMapPoints,
+  getNearbyOffers,
+  getOfferDetails,
+  getSelectedPoint
+} from '../../store/selectors/details.ts';
+import { getAuthorizationStatus } from '../../store/selectors/user.ts';
 
 export default function OfferPage(): JSX.Element {
-  const { id } = useParams<{ id: string }>();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
 
-  const [selectedPoint, setSelectedPoint] = useState<City | undefined>(undefined);
-
-  const isLoading = useSelector((state: RootState) => state.details.loading);
-  const offerDetails: OfferDetails | null = useSelector((state: RootState) => state.details.offerDetails);
-  const authorizationStatus = useSelector((state: RootState) => state.user.authorizationStatus);
-  const offers = useSelector((state: RootState) => state.offers.offers);
-  const nearbyOffers = useSelector((state: RootState) => state.details.nearbyOffers);
+  const isLoading = useSelector(getLoadingState);
+  const offerDetails = useSelector(getOfferDetails);
   const comments = useSelector((state: RootState) => state.comments.comments);
-  const getMapPoints = (): City[] => {
-    const nearByPoints: City[] = nearbyOffers.slice(0 , 3).map((item) => ({
-      id: item.id,
-      name: item.title,
-      location: item.location,
-    }));
-
-    if (offerDetails) {
-      return [
-        ...nearByPoints, {
-          id: offerDetails.id,
-          name: offerDetails?.city.name,
-          location: offerDetails?.location,
-        }
-      ];
-    }
-    return nearByPoints;
-  };
+  const mapPoints = useSelector(getMapPoints);
+  const selectedPoint = useSelector(getSelectedPoint);
+  const nearbyOffers = useSelector(getNearbyOffers);
+  const authorizationStatus = useSelector(getAuthorizationStatus);
 
   useEffect(() => {
     if (id) {
-      dispatch(fetchOfferDetails(id))
-        .unwrap()
-        .then(() => {
-          dispatch(fetchNearbyOffers(id));
-        })
-        .then(() => {
-          dispatch(fetchOfferComments(id));
-        })
-        .catch((error) => {
-          const axiosError = error as AxiosError;
-          if (axiosError.message === 'Offer not found') {
-            navigate(RoutePath.NotFound);
-          }
-        });
+      dispatch(fetchOfferDetails(id));
+      dispatch(fetchNearbyOffers(id));
+      dispatch(fetchOfferComments(id));
     }
-  }, [dispatch, id, navigate]);
+  }, [dispatch, id]);
 
-  const handleCommentSubmit = async (rating: number, commentText: string) => {
+  const onCommentSubmit = async (rating: number, commentText: string) => {
     if (offerDetails) {
       await dispatch(
         sendComment({
@@ -87,20 +64,7 @@ export default function OfferPage(): JSX.Element {
     }
   };
 
-  const onListItemHoverHandler = (offer: Offer | null): void => {
-    if (offer) {
-      const point: City = {
-        id: offer.id,
-        name: offer.title,
-        location: offer.location
-      };
-      setSelectedPoint(point);
-    } else {
-      setSelectedPoint(undefined);
-    }
-  };
-
-  const handleFavoriteClick = async () => {
+  const onFavoriteClick = async () => {
     if (authorizationStatus !== LoginStatus.Auth) {
       navigate('/login');
       return;
@@ -144,24 +108,13 @@ export default function OfferPage(): JSX.Element {
     isFavorite,
   } = offerDetails;
 
-  const formattedRating = Math.round(rating * 20);
-
   return (
     <div className="page">
       <Header />
 
       <main className="page__main page__main--offer">
         <section className="offer">
-          <div className="offer__gallery-container container">
-            <div className="offer__gallery">
-              {images.slice(0, 6).map((image, index) => (
-                // eslint-disable-next-line react/no-array-index-key
-                <div key={index} className="offer__image-wrapper">
-                  <img className="offer__image" src={image} alt={`Photo ${index + 1}`} />
-                </div>
-              ))}
-            </div>
-          </div>
+          <OfferGallery images={images} />
           <div className="offer__container container">
             <div className="offer__wrapper">
               {isPremium && (
@@ -173,19 +126,22 @@ export default function OfferPage(): JSX.Element {
                 <h1 className="offer__name">{title}</h1>
                 <FavoriteButton
                   isFavorite={isFavorite ?? false}
-                  onFavoriteButtonClick={handleFavoriteClick}
+                  onFavoriteButtonClick={onFavoriteClick}
                   environment={FavoritesEnvironment.Details}
                 />
               </div>
               <div className="offer__rating rating">
                 <div className="offer__stars rating__stars">
-                  <span style={{ width: `${formattedRating}%` }}></span>
+                  <span style={{width: `${Math.round(rating) * 20}%`}}></span>
                   <span className="visually-hidden">Rating</span>
                 </div>
-                <span className="offer__rating-value rating__value">{rating}</span>
+                <span className="offer__rating-value rating__value">{rating.toFixed(1)}</span>
               </div>
               <ul className="offer__features">
-                <li className="offer__feature offer__feature--entire">{type.charAt(0).toUpperCase() + type.slice(1)}</li>
+                <li
+                  className="offer__feature offer__feature--entire"
+                >{type.charAt(0).toUpperCase() + type.slice(1)}
+                </li>
                 <li className="offer__feature offer__feature--bedrooms">
                   {bedrooms} {bedrooms === 1 ? 'Bedroom' : 'Bedrooms'}
                 </li>
@@ -200,9 +156,8 @@ export default function OfferPage(): JSX.Element {
               <div className="offer__inside">
                 <h2 className="offer__inside-title">What&apos;s inside</h2>
                 <ul className="offer__inside-list">
-                  {goods.map((good, index) => (
-                    // eslint-disable-next-line react/no-array-index-key
-                    <li key={index} className="offer__inside-item">
+                  {goods.map((good) => (
+                    <li key={good} className="offer__inside-item">
                       {good}
                     </li>
                   ))}
@@ -226,18 +181,15 @@ export default function OfferPage(): JSX.Element {
                   Reviews &middot; <span className="reviews__amount">{comments.length}</span>
                 </h2>
                 <CommentList comments={comments} />
-                {
-                  authorizationStatus === LoginStatus.Auth &&
-                  <CommentForm
-                    onSubmit={handleCommentSubmit}
-                  />
-                }
+                {authorizationStatus === LoginStatus.Auth && (
+                  <CommentForm onSubmit={onCommentSubmit} />
+                )}
               </section>
             </div>
           </div>
           <section className="offer__map map">
             <Map
-              points={getMapPoints()}
+              points={mapPoints}
               selectedPoint={selectedPoint}
               height="579px"
             />
@@ -246,11 +198,7 @@ export default function OfferPage(): JSX.Element {
         <div className="container">
           <section className="near-places places">
             <h2 className="near-places__title">Other places in the neighbourhood</h2>
-            <OfferList
-              className="near-places__list"
-              offers={offers.slice(0, 4)}
-              onListItemHover={onListItemHoverHandler}
-            />
+            <OfferList className="near-places__list" offers={nearbyOffers.slice(0, 4)} />
           </section>
         </div>
       </main>

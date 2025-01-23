@@ -1,57 +1,39 @@
-import { useState, useMemo } from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store';
+import { useState } from 'react';
 import { useAppDispatch } from '../../hooks/useDispatch';
-import { changeCity } from '../../store/slices/city-slice.ts';
+import { changeCity } from '../../store/slices/city.ts';
 
 import Header from '../../components/header/header.tsx';
 import LocationsList from '../../components/locations-list/locations-list.tsx';
 import PlacesSorting from '../../components/places-sorting/places-sorting.tsx';
-import OfferList from '../../components/offer/offer-list.tsx';
+import OfferList from '../../components/offer-list/offer-list.tsx';
 import Map from '../../components/map/map.tsx';
 import NoPlaces from '../../components/no-places/no-places.tsx';
 import LoadingSpinner from '../../components/spiner/spiner.tsx';
 
-import {City, Offer, SortOption} from '../../types.ts';
-import { SortOptions } from '../../constant.ts';
+import { City, Offer } from '../../types.ts';
+import { useSelector } from 'react-redux';
+import {
+  getActiveCity,
+  getLoadingOffersState,
+  getOffersByCity,
+  getSortedOffers,
+  getPointsForMap,
+  hasOffersByCity,
+} from '../../store/selectors/offers.ts';
 
 export default function MainPage(): JSX.Element {
   const dispatch = useAppDispatch();
 
-  const [selectedPoint, setSelectedPoint] = useState<City | undefined>(undefined);
-  const [currentSort, setCurrentSort] = useState<SortOption>(SortOptions.Popular);
+  const [selectedPoint, setSelectedPoint] = useState<City | null>(null);
 
-  const activeCity = useSelector((state: RootState) => state.city.activeCity);
-  const offers = useSelector((state: RootState) => state.offers.offers);
-  const loadingOffers = useSelector((state: RootState) => state.offers.loading);
+  const activeCity = useSelector(getActiveCity);
+  const loadingOffers = useSelector(getLoadingOffersState);
+  const offersByCity = useSelector(getOffersByCity);
+  const sortedOffers = useSelector(getSortedOffers);
+  const pointsForMap = useSelector(getPointsForMap);
+  const hasOffers = useSelector(hasOffersByCity);
 
-  const offersByCity = offers.filter((offer) => offer.city.name === activeCity);
-  const pointsForMap: City[] = offersByCity.map((offer) => ({
-    id: offer.id,
-    name: offer.title,
-    location: offer.location,
-  }));
-
-  const sortedOffers = useMemo(() => {
-    const sorted = [...offersByCity];
-    switch (currentSort) {
-      case SortOptions.LowToHigh:
-        return sorted.sort((a, b) => a.price - b.price);
-      case SortOptions.HighToLow:
-        return sorted.sort((a, b) => b.price - a.price);
-      case SortOptions.TopRated:
-        return sorted.sort((a, b) => b.rating - a.rating);
-      case SortOptions.Popular:
-      default:
-        return sorted;
-    }
-  }, [offersByCity, currentSort]);
-
-  function handleSortChange(sort: SortOption): void {
-    setCurrentSort(sort);
-  }
-
-  function handleCityChange(cityName: string): void {
+  function onCityChange(cityName: string): void {
     dispatch(changeCity(cityName));
   }
 
@@ -60,21 +42,20 @@ export default function MainPage(): JSX.Element {
       const point: City = {
         id: offer.id,
         name: offer.title,
-        location: offer.location
+        location: offer.location,
       };
       setSelectedPoint(point);
     } else {
-      setSelectedPoint(undefined);
+      setSelectedPoint(null);
     }
   }
 
-  const hasOffers = offersByCity.length > 0;
   let content: JSX.Element;
 
   if (loadingOffers) {
     content = (
       <div className="loading-spinner-container">
-        <LoadingSpinner/>
+        <LoadingSpinner />
       </div>
     );
   } else if (hasOffers) {
@@ -85,21 +66,11 @@ export default function MainPage(): JSX.Element {
           <b className="places__found">
             {offersByCity.length} {offersByCity.length === 1 ? 'place' : 'places'} to stay in {activeCity}
           </b>
-          <PlacesSorting
-            currentSort={currentSort}
-            onSortChange={handleSortChange}
-          />
-          <OfferList
-            offers={sortedOffers}
-            onListItemHover={onListItemHoverHandler}
-          />
+          <PlacesSorting/>
+          <OfferList offers={sortedOffers} onListItemHover={onListItemHoverHandler} />
         </section>
         <div className="cities__right-section">
-          <Map
-            points={pointsForMap}
-            selectedPoint={selectedPoint}
-            height="100vh"
-          />
+          <Map points={pointsForMap} selectedPoint={selectedPoint} height="100vh" />
         </div>
       </div>
     );
@@ -110,19 +81,14 @@ export default function MainPage(): JSX.Element {
   return (
     <div>
       <div className="page page--gray page--main">
-        <Header/>
+        <Header />
 
         <main className={`page__main page__main--index ${!hasOffers ? 'page__main--index-empty' : ''}`}>
           <h1 className="visually-hidden">Cities</h1>
 
-          <LocationsList
-            activeCity={activeCity}
-            onCityChange={handleCityChange}
-          />
+          <LocationsList activeCity={activeCity} onCityChange={onCityChange} />
 
-          <div className="cities">
-            {content}
-          </div>
+          <div className="cities">{content}</div>
         </main>
       </div>
     </div>
