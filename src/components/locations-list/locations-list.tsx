@@ -1,4 +1,4 @@
-import {CITIES} from '../../constant.ts';
+import { CITIES } from '../../constant.ts';
 
 type TabListProps = {
   activeCity: string;
@@ -19,7 +19,7 @@ export default function LocationsList({ activeCity, onCityChange }: TabListProps
                 className={`locations__item-link tabs__item ${
                   activeCity === city ? 'tabs__item--active' : ''
                 }`}
-                href="#"
+                role="button"
                 onClick={(e) => {
                   e.preventDefault();
                   onCityChange(city);

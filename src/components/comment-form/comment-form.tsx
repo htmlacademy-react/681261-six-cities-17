@@ -1,18 +1,12 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { COMMENT_MAX_LENGTH, COMMENT_MIN_LENGTH, RATING_VALUES, ratingTitles } from '../../constant.ts';
 
 type CommentFormProps = {
   onSubmit: (rating: number, comment: string) => Promise<void>;
 };
 
-const ratingTitles: Record<number, string> = {
-  5: 'Отлично',
-  4: 'Хорошо',
-  3: 'Неплохо',
-  2: 'Плохо',
-  1: 'Ужасно',
-};
 
 export default function CommentForm({ onSubmit }: CommentFormProps): JSX.Element {
   const [rating, setRating] = useState<number | null>(null);
@@ -35,13 +29,13 @@ export default function CommentForm({ onSubmit }: CommentFormProps): JSX.Element
       return;
     }
 
-    if (comment.length < 50) {
-      toast.error('Комментарий должен содержать не менее 50 символов.');
+    if (comment.length < COMMENT_MIN_LENGTH) {
+      toast.error(`Комментарий должен содержать не менее ${COMMENT_MIN_LENGTH} символов.`);
       return;
     }
 
-    if (comment.length > 300) {
-      toast.error('Комментарий не должен превышать 300 символов.');
+    if (comment.length > COMMENT_MAX_LENGTH) {
+      toast.error(`Комментарий не должен превышать ${COMMENT_MAX_LENGTH} символов.`);
       return;
     }
 
@@ -69,7 +63,7 @@ export default function CommentForm({ onSubmit }: CommentFormProps): JSX.Element
     >
       <label className="reviews__label form__label" htmlFor="review">Ваш отзыв</label>
       <div className="reviews__rating-form form__rating">
-        {[5, 4, 3, 2, 1].map((star) => (
+        {RATING_VALUES.map((star) => (
           <React.Fragment key={star}>
             <input
               className="form__rating-input visually-hidden"
@@ -100,21 +94,20 @@ export default function CommentForm({ onSubmit }: CommentFormProps): JSX.Element
         placeholder="Расскажите, как прошла ваша поездка, что вам понравилось и что можно улучшить"
         value={comment}
         onChange={handleCommentChange}
-        minLength={50}
-        maxLength={300}
+        minLength={COMMENT_MIN_LENGTH}
+        maxLength={COMMENT_MAX_LENGTH}
         disabled={isSubmitting}
         required
-      >
-      </textarea>
+      />
       <div className="reviews__button-wrapper">
         <p className="reviews__help">
           Для отправки отзыва, пожалуйста, убедитесь, что вы поставили <span className="reviews__star">рейтинг</span> и
-          описали своё пребывание минимум <b className="reviews__text-amount">50 символами</b>.
+          описали своё пребывание минимум <b className="reviews__text-amount">{COMMENT_MIN_LENGTH} символами</b>.
         </p>
         <button
           className="reviews__submit form__submit button"
           type="submit"
-          disabled={isSubmitting || rating === null || comment.length < 50 || comment.length > 300}
+          disabled={isSubmitting || rating === null || comment.length < COMMENT_MIN_LENGTH || comment.length > COMMENT_MAX_LENGTH}
         >
           Отправить
         </button>

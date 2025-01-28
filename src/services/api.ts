@@ -5,7 +5,7 @@ import {getToken} from './token.ts';
 const BASE_URL = 'https://16.design.htmlacademy.pro/six-cities';
 const DEFAULT_TIMEOUT = 5000;
 
-enum StatusCodes {
+enum StatusCode {
   BAD_REQUEST = 400,
   UNAUTHORIZED = 401,
   NOT_FOUND = 404,
@@ -17,9 +17,9 @@ type ErrorMessage = {
 }
 
 const StatusCodeMapping: Record<number, boolean> = {
-  [StatusCodes.BAD_REQUEST]: true,
-  [StatusCodes.UNAUTHORIZED]: false,
-  [StatusCodes.NOT_FOUND]: true,
+  [StatusCode.BAD_REQUEST]: true,
+  [StatusCode.UNAUTHORIZED]: false,
+  [StatusCode.NOT_FOUND]: true,
 };
 
 const shouldDisplayError = (response: AxiosResponse) => StatusCodeMapping[response.status];

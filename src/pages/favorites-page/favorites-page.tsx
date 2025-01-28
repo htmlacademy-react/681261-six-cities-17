@@ -4,6 +4,8 @@ import FavoritesEmptyState from '../../components/favorites/components/empty-sta
 
 import { useSelector } from 'react-redux';
 import { getFavorites } from '../../store/selectors/favorites.ts';
+import { Link } from 'react-router-dom';
+import { RoutePath } from '../../constant.ts';
 
 export default function FavoritesPage(): JSX.Element {
   const favorites = useSelector(getFavorites);
@@ -14,7 +16,7 @@ export default function FavoritesPage(): JSX.Element {
         <Header />
         <FavoritesEmptyState />
         <footer className="footer container">
-          <a className="footer__logo-link" href="main.html">
+          <Link className="footer__logo-link" to={RoutePath.Main}>
             <img
               className="footer__logo"
               src="img/logo.svg"
@@ -22,7 +24,7 @@ export default function FavoritesPage(): JSX.Element {
               width="64"
               height="33"
             />
-          </a>
+          </Link>
         </footer>
       </div>
     );
@@ -39,7 +41,7 @@ export default function FavoritesPage(): JSX.Element {
       </main>
 
       <footer className="footer container">
-        <a className="footer__logo-link" href="main.html">
+        <Link className="footer__logo-link" to={RoutePath.Main}>
           <img
             className="footer__logo"
             src="img/logo.svg"
@@ -47,7 +49,7 @@ export default function FavoritesPage(): JSX.Element {
             width="64"
             height="33"
           />
-        </a>
+        </Link>
       </footer>
     </div>
   );

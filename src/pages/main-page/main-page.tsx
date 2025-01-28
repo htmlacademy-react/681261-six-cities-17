@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useAppDispatch } from '../../hooks/useDispatch';
+import { useAppDispatch } from '../../hooks/use-dispatch.ts';
 import { changeCity } from '../../store/slices/city.ts';
 
 import Header from '../../components/header/header.tsx';

@@ -1,15 +1,14 @@
-import {useRef, useEffect, useState} from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { SortOption } from '../../types.ts';
 import { getCurrentSort } from '../../store/selectors/offers.ts';
 import { setCurrentSort } from '../../store/slices/offer.ts';
-import { SortOptions } from '../../constant.ts';
+import { SortOption } from '../../constant.ts';
 
 const sortOptions: SortOption[] = [
-  SortOptions.Popular,
-  SortOptions.LowToHigh,
-  SortOptions.HighToLow,
-  SortOptions.TopRated,
+  SortOption.Popular,
+  SortOption.LowToHigh,
+  SortOption.HighToLow,
+  SortOption.TopRated,
 ];
 
 export default function PlacesSorting(): JSX.Element {
@@ -19,16 +18,16 @@ export default function PlacesSorting(): JSX.Element {
   const dropdownRef = useRef<HTMLFormElement>(null);
   const [isOpen, setIsOpen] = useState(false);
 
-  const toggleDropdown = () => {
+  const handleDropdownToggle = () => {
     setIsOpen((prev) => !prev);
   };
 
-  const handleOptionClick = (option: SortOption) => {
+  const handleOptionSelect = (option: SortOption) => {
     dispatch(setCurrentSort(option));
     setIsOpen(false);
   };
 
-  const handleClickOutside = (event: MouseEvent) => {
+  const handleClickOutsideDropdown = (event: MouseEvent) => {
     if (
       dropdownRef.current &&
       !dropdownRef.current.contains(event.target as Node)
@@ -37,18 +36,18 @@ export default function PlacesSorting(): JSX.Element {
     }
   };
 
-  const handleKeyDown = (event: KeyboardEvent) => {
+  const handleKeyDownOnDocument = (event: KeyboardEvent) => {
     if (event.key === 'Escape') {
       setIsOpen(false);
     }
   };
 
   useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
-    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('mousedown', handleClickOutsideDropdown);
+    document.addEventListener('keydown', handleKeyDownOnDocument);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('mousedown', handleClickOutsideDropdown);
+      document.removeEventListener('keydown', handleKeyDownOnDocument);
     };
   }, []);
 
@@ -58,11 +57,11 @@ export default function PlacesSorting(): JSX.Element {
       <span
         className="places__sorting-type"
         tabIndex={0}
-        onClick={toggleDropdown}
+        onClick={handleDropdownToggle}
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
-            toggleDropdown();
+            handleDropdownToggle();
           }
         }}
       >
@@ -78,11 +77,11 @@ export default function PlacesSorting(): JSX.Element {
               key={option}
               className={`places__option ${option === currentSort ? 'places__option--active' : ''}`}
               tabIndex={0}
-              onClick={() => handleOptionClick(option)}
+              onClick={() => handleOptionSelect(option)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault();
-                  handleOptionClick(option);
+                  handleOptionSelect(option);
                 }
               }}
             >

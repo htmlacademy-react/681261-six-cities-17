@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import { RootState } from '../../store';
-import { useAppDispatch } from '../../hooks/useDispatch';
+import { useAppDispatch } from '../../hooks/use-dispatch.ts';
 
 import Header from '../../components/header/header.tsx';
 import LoadingSpinner from '../../components/spiner/spiner.tsx';
@@ -13,7 +13,7 @@ import Map from '../../components/map/map.tsx';
 import OfferList from '../../components/offer-list/offer-list.tsx';
 import OfferGallery from '../../components/offer-gallery/offer-gallery.tsx';
 
-import { LoginStatus } from '../../constant.ts';
+import { ADULT_TEXT, LoginStatus, RATING_MULTIPLIER, ROOM_TEXT } from '../../constant.ts';
 
 import { fetchNearbyOffers, fetchOfferDetails } from '../../store/slices/details.ts';
 import { fetchOfferComments, sendComment } from '../../store/slices/comments.ts';
@@ -30,6 +30,7 @@ import {
   getSelectedPoint
 } from '../../store/selectors/details.ts';
 import { getAuthorizationStatus } from '../../store/selectors/user.ts';
+import {FAVORITE_STATUS} from "../../store/types.ts";
 
 export default function OfferPage(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -52,7 +53,7 @@ export default function OfferPage(): JSX.Element {
     }
   }, [dispatch, id]);
 
-  const onCommentSubmit = async (rating: number, commentText: string) => {
+  const handleCommentSubmit = async (rating: number, commentText: string) => {
     if (offerDetails) {
       await dispatch(
         sendComment({
@@ -64,7 +65,7 @@ export default function OfferPage(): JSX.Element {
     }
   };
 
-  const onFavoriteClick = async () => {
+  const handleFavoriteClick = async () => {
     if (authorizationStatus !== LoginStatus.Auth) {
       navigate('/login');
       return;
@@ -72,9 +73,11 @@ export default function OfferPage(): JSX.Element {
 
     if (offerDetails) {
       const { isFavorite, id: offerId } = offerDetails;
-      const newStatus = isFavorite ? 0 : 1;
+      const newStatus = isFavorite ? FAVORITE_STATUS.REMOVE : FAVORITE_STATUS.ADD;
 
-      const updatedOffer = await dispatch(changeFavoriteStatus({ offerId, status: newStatus })).unwrap();
+      const updatedOffer = await dispatch(
+        changeFavoriteStatus({ offerId, status: newStatus })
+      ).unwrap();
 
       dispatch(updateFavoriteInOffersList(updatedOffer));
       dispatch(updateFavoriteInFavorites(updatedOffer));
@@ -126,27 +129,26 @@ export default function OfferPage(): JSX.Element {
                 <h1 className="offer__name">{title}</h1>
                 <FavoriteButton
                   isFavorite={isFavorite ?? false}
-                  onFavoriteButtonClick={onFavoriteClick}
+                  onFavoriteButtonClick={handleFavoriteClick}
                   environment={FavoritesEnvironment.Details}
                 />
               </div>
               <div className="offer__rating rating">
                 <div className="offer__stars rating__stars">
-                  <span style={{width: `${Math.round(rating) * 20}%`}}></span>
+                  <span style={{width: `${Math.round(rating) * RATING_MULTIPLIER}%`}}></span>
                   <span className="visually-hidden">Rating</span>
                 </div>
                 <span className="offer__rating-value rating__value">{rating.toFixed(1)}</span>
               </div>
               <ul className="offer__features">
-                <li
-                  className="offer__feature offer__feature--entire"
-                >{type.charAt(0).toUpperCase() + type.slice(1)}
+                <li className="offer__feature offer__feature--entire">
+                  {type.charAt(0).toUpperCase() + type.slice(1)}
                 </li>
                 <li className="offer__feature offer__feature--bedrooms">
-                  {bedrooms} {bedrooms === 1 ? 'Bedroom' : 'Bedrooms'}
+                  {bedrooms} {bedrooms === 1 ? ROOM_TEXT.SINGLE : ROOM_TEXT.PLURAL}
                 </li>
                 <li className="offer__feature offer__feature--adults">
-                  Max {maxAdults} {maxAdults === 1 ? 'adult' : 'adults'}
+                  Max {maxAdults} {maxAdults === 1 ? ADULT_TEXT.SINGLE : ADULT_TEXT.PLURAL}
                 </li>
               </ul>
               <div className="offer__price">
@@ -182,7 +184,7 @@ export default function OfferPage(): JSX.Element {
                 </h2>
                 <CommentList comments={comments} />
                 {authorizationStatus === LoginStatus.Auth && (
-                  <CommentForm onSubmit={onCommentSubmit} />
+                  <CommentForm onSubmit={handleCommentSubmit} />
                 )}
               </section>
             </div>
@@ -198,7 +200,7 @@ export default function OfferPage(): JSX.Element {
         <div className="container">
           <section className="near-places places">
             <h2 className="near-places__title">Other places in the neighbourhood</h2>
-            <OfferList className="near-places__list" offers={nearbyOffers.slice(0, 4)} />
+            <OfferList className="near-places__list" offers={nearbyOffers.slice(0, 3)} />
           </section>
         </div>
       </main>

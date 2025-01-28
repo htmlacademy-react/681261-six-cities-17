@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { UserLoginPayload } from '../../store/types.ts';
 import { useNavigate } from 'react-router-dom';
 import { LoginStatus, RoutePath, CITIES } from '../../constant.ts';
-import { useAppDispatch } from '../../hooks/useDispatch.ts';
+import { useAppDispatch } from '../../hooks/use-dispatch.ts';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { loginAction } from '../../store/slices/user.ts';
