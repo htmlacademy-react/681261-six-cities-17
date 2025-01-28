@@ -30,7 +30,7 @@ import {
   getSelectedPoint
 } from '../../store/selectors/details.ts';
 import { getAuthorizationStatus } from '../../store/selectors/user.ts';
-import {FAVORITE_STATUS} from "../../store/types.ts";
+import { FAVORITE_STATUS } from '../../store/types.ts';
 
 export default function OfferPage(): JSX.Element {
   const dispatch = useAppDispatch();

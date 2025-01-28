@@ -1,7 +1,7 @@
 import {createSlice, createAsyncThunk, PayloadAction} from '@reduxjs/toolkit';
 import { AxiosInstance } from 'axios';
 import { Offer } from '../../types';
-import { SortOption, SortOption } from '../../constant';
+import { SortOption } from '../../constant';
 
 export const loadOffers = createAsyncThunk<Offer[], void, { extra: AxiosInstance }>(
   'offers/loadOffers',
