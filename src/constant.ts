@@ -3,30 +3,55 @@ export enum RoutePath {
   Login = '/login',
   Favorites = '/favorites',
   Offer = '/offer/:id',
-  NotFound = '/404',
 }
 
 export enum LoginStatus {
   Auth = 'AUTH',
   NotAuth = 'NOT_AUTH',
-  Unknown = 'UNKNOWN',
 }
 
-export enum SortOptions {
+export enum SortOption {
   Popular = 'Popular',
   LowToHigh = 'Price: low to high',
   HighToLow = 'Price: high to low',
   TopRated = 'Top rated first',
 }
 
-export type SortOption = 'Popular' | 'Price: low to high' | 'Price: high to low' | 'Top rated first';
-
-export const DEFAULT_MAP_ZOOM = 10;
-
-export const URL_MARKER_DEFAULT =
-    'https://assets.htmlacademy.ru/content/intensive/javascript-1/demo/interactive-map/pin.svg';
-
-export const URL_MARKER_CURRENT =
-    'https://assets.htmlacademy.ru/content/intensive/javascript-1/demo/interactive-map/main-pin.svg';
+export const Pin = {
+  DefaultUrl: '/img/pin.svg',
+  CurrentUrl: '/img/pin-active.svg',
+  Size: [28, 40] as [number, number],
+  Anchor: [14, 40] as [number, number],
+} as const;
 
 export const CITIES: string[] = ['Paris', 'Cologne', 'Brussels', 'Amsterdam', 'Hamburg', 'Dusseldorf'];
+
+export const RATING_MULTIPLIER = 20;
+
+export const ROOM_TEXT = {
+  SINGLE: 'Bedroom',
+  PLURAL: 'Bedrooms',
+};
+
+export const ADULT_TEXT = {
+  SINGLE: 'adult',
+  PLURAL: 'adults',
+};
+
+export const COMMENT_MIN_LENGTH = 50;
+export const COMMENT_MAX_LENGTH = 300;
+export const RATING_VALUES = [5, 4, 3, 2, 1] as const;
+
+export const ratingTitles: Record<number, string> = {
+  5: 'Отлично',
+  4: 'Хорошо',
+  3: 'Неплохо',
+  2: 'Плохо',
+  1: 'Ужасно',
+};
+
+export const MAX_COMMENTS_DISPLAY = 10;
+
+export const MAX_GALLERY_IMAGES = 6;
+
+export const MAX_NEARBY_POINTS = 3;

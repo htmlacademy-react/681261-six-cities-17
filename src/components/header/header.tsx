@@ -1,8 +1,8 @@
 import { useSelector } from 'react-redux';
+import { useLocation, Link } from 'react-router-dom';
 import { RootState } from '../../store';
-import { Link } from 'react-router-dom';
 import { LoginStatus, RoutePath } from '../../constant.ts';
-import { useAppDispatch } from '../../hooks/useDispatch.ts';
+import { useAppDispatch } from '../../hooks/use-dispatch.ts';
 import { logoutAction, resetUserInfo } from '../../store/slices/user.ts';
 
 export default function Header(): JSX.Element {
@@ -10,6 +10,7 @@ export default function Header(): JSX.Element {
   const authStatus = useSelector((state: RootState) => state.user.authorizationStatus);
   const user = useSelector((state: RootState) => state.user.user);
   const favCount = useSelector((state: RootState) => state.favorites.favorites.length);
+  const location = useLocation();
 
   const handleLogout = () => {
     dispatch(logoutAction())
@@ -18,6 +19,8 @@ export default function Header(): JSX.Element {
         dispatch(resetUserInfo());
       });
   };
+
+  const isLoginPage = location.pathname === RoutePath.Login as string;
 
   return (
     <header className="header">
@@ -34,40 +37,50 @@ export default function Header(): JSX.Element {
               />
             </Link>
           </div>
-          <nav className="header__nav">
-            <ul className="header__nav-list">
-              {authStatus === LoginStatus.Auth && user ? (
-                <>
+          {!isLoginPage && (
+            <nav className="header__nav">
+              <ul className="header__nav-list">
+                {authStatus === LoginStatus.Auth && user ? (
+                  <>
+                    <li className="header__nav-item user">
+                      <Link
+                        className="header__nav-link header__nav-link--profile"
+                        to={RoutePath.Favorites}
+                      >
+                        <div className="header__avatar-wrapper user__avatar-wrapper">
+                          <img
+                            src={user.avatarUrl}
+                            alt="User avatar"
+                            width="20"
+                            height="20"
+                            className="header__avatar"
+                          />
+                        </div>
+                        <span className="header__user-name user__name">{user.email}</span>
+                        <span className="header__favorite-count">{favCount}</span>
+                      </Link>
+                    </li>
+                    <li className="header__nav-item">
+                      <Link
+                        className="header__nav-link"
+                        to={RoutePath.Login}
+                        onClick={handleLogout}
+                      >
+                        <span className="header__login">Sign out</span>
+                      </Link>
+                    </li>
+                  </>
+                ) : (
                   <li className="header__nav-item user">
-                    <Link className="header__nav-link header__nav-link--profile" to={RoutePath.Favorites}>
-                      <div className="header__avatar-wrapper user__avatar-wrapper">
-                        <img
-                          src={user.avatarUrl}
-                          alt="User avatar"
-                          width="20"
-                          height="20"
-                          className="header__avatar"
-                        />
-                      </div>
-                      <span className="header__user-name user__name">{user.email}</span>
-                      <span className="header__favorite-count">{favCount}</span>
+                    <div className="header__avatar-wrapper user__avatar-wrapper"></div>
+                    <Link className="header__nav-link" to={RoutePath.Login}>
+                      <span className="header__login">Sign in</span>
                     </Link>
                   </li>
-                  <li className="header__nav-item">
-                    <Link className="header__nav-link" to={RoutePath.Login} onClick={handleLogout}>
-                      <span className="header__login">Log out</span>
-                    </Link>
-                  </li>
-                </>
-              ) : (
-                <li className="header__nav-item">
-                  <Link className="header__nav-link" to={RoutePath.Login}>
-                    <span className="header__login">Login</span>
-                  </Link>
-                </li>
-              )}
-            </ul>
-          </nav>
+                )}
+              </ul>
+            </nav>
+          )}
         </div>
       </div>
     </header>

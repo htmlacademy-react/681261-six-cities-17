@@ -1,15 +1,16 @@
-import { useAppDispatch } from '../../../../hooks/useDispatch.ts';
-import { useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '../../../../hooks/use-dispatch.ts';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Offer } from '../../../../types.ts';
 import FavoriteButton from '../button/button.tsx';
 import { FavoritesEnvironment } from '../../types.ts';
 import { changeFavoriteStatus } from '../../../../store/slices/favorites.ts';
 import { updateFavoriteInFavorites } from '../../../../store/slices/favorites.ts';
-import { LoginStatus } from '../../../../constant.ts';
+import {LoginStatus, RoutePath} from '../../../../constant.ts';
 import { RootState } from '../../../../store';
 import { updateFavoriteInOffersList } from '../../../../store/slices/offer.ts';
 import { updateFavoriteInDetails } from '../../../../store/slices/details.ts';
+import { FAVORITE_STATUS } from '../../../../store/types.ts';
 
 type FavoritesCardProps = {
   offer: Offer;
@@ -20,13 +21,13 @@ export default function Card({ offer }: FavoritesCardProps) {
   const navigate = useNavigate();
   const authorizationStatus = useSelector((state: RootState) => state.user.authorizationStatus);
 
-  const onFavoriteButtonClick = async () => {
+  const handleFavoriteButtonClick = async () => {
     if (authorizationStatus !== LoginStatus.Auth) {
-      navigate('/login');
+      navigate(RoutePath.Login);
       return;
     }
 
-    const newStatus = offer.isFavorite ? 0 : 1;
+    const newStatus = offer.isFavorite ? FAVORITE_STATUS.REMOVE : FAVORITE_STATUS.ADD;
 
     const updatedOffer = await dispatch(
       changeFavoriteStatus({ offerId: offer.id, status: newStatus })
@@ -45,7 +46,7 @@ export default function Card({ offer }: FavoritesCardProps) {
         </div>
       )}
       <div className="favorites__image-wrapper place-card__image-wrapper">
-        <a href="#">
+        <Link to={`/offer/${offer.id}`}>
           <img
             className="place-card__image"
             src={offer.previewImage}
@@ -53,7 +54,7 @@ export default function Card({ offer }: FavoritesCardProps) {
             height="110"
             alt="Place image"
           />
-        </a>
+        </Link>
       </div>
       <div className="favorites__card-info place-card__info">
         <div className="place-card__price-wrapper">
@@ -63,7 +64,7 @@ export default function Card({ offer }: FavoritesCardProps) {
           </div>
           <FavoriteButton
             isFavorite={offer.isFavorite}
-            onFavoriteButtonClick={onFavoriteButtonClick}
+            onFavoriteButtonClick={handleFavoriteButtonClick}
             environment={FavoritesEnvironment.Card}
           />
         </div>
@@ -74,7 +75,7 @@ export default function Card({ offer }: FavoritesCardProps) {
           </div>
         </div>
         <h2 className="place-card__name">
-          <a href="#">{offer.title}</a>
+          <Link to={`/offer/${offer.id}`}>{offer.title}</Link>
         </h2>
         <p className="place-card__type">{offer.type}</p>
       </div>

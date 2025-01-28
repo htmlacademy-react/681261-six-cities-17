@@ -1,5 +1,6 @@
 import { createSelector } from 'reselect';
 import { RootState } from '../index.ts';
+import { MAX_NEARBY_POINTS } from '../../constant.ts';
 
 export const getOfferDetails = (state: RootState) => state.details.offerDetails;
 export const getNearbyOffers = (state: RootState) => state.details.nearbyOffers;
@@ -22,7 +23,7 @@ export const getSelectedPoint = createSelector(
 export const getMapPoints = createSelector(
   [getNearbyOffers, getSelectedPoint],
   (nearbyOffers, selectedPoint) => {
-    const nearbyPoints = nearbyOffers.slice(0, 3).map((item) => ({
+    const nearbyPoints = nearbyOffers.slice(0, MAX_NEARBY_POINTS).map((item) => ({
       id: item.id,
       name: item.title,
       location: item.location,

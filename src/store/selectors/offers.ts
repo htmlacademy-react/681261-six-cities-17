@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 import { RootState } from '../index.ts';
-import { SortOptions } from '../../constant.ts';
+import { SortOption } from '../../constant.ts';
 
 export const getOffers = (state: RootState) => state.offers.offers;
 export const getActiveCity = (state: RootState) => state.city.activeCity;
@@ -16,16 +16,16 @@ export const getOffersByCity = createSelector(
 export const getSortedOffers = createSelector(
   [getOffersByCity, getCurrentSort],
   (offersByCity, currentSort) => {
-    const sorted = [...offersByCity];
+    const sortedOffers = [...offersByCity];
     switch (currentSort) {
-      case SortOptions.LowToHigh:
-        return sorted.sort((a, b) => a.price - b.price);
-      case SortOptions.HighToLow:
-        return sorted.sort((a, b) => b.price - a.price);
-      case SortOptions.TopRated:
-        return sorted.sort((a, b) => b.rating - a.rating);
+      case SortOption.LowToHigh:
+        return sortedOffers.sort((a, b) => a.price - b.price);
+      case SortOption.HighToLow:
+        return sortedOffers.sort((a, b) => b.price - a.price);
+      case SortOption.TopRated:
+        return sortedOffers.sort((a, b) => b.rating - a.rating);
       default:
-        return sorted;
+        return sortedOffers;
     }
   }
 );

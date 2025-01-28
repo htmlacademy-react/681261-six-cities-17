@@ -27,8 +27,6 @@ export interface NearbyOffer {
   previewImage: string;
 }
 
-export type SortOption = 'Popular' | 'Price: low to high' | 'Price: high to low' | 'Top rated first';
-
 export type Offer = {
   id: string;
   title: string;
