@@ -1,14 +1,15 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../../../../hooks/useDispatch.ts';
+import { useAppDispatch } from '../../../../hooks/use-dispatch.ts';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store';
 import { Offer } from '../../../../types.ts';
 import { FavoritesEnvironment } from '../../../favorites/types.ts';
 import FavoriteButton from '../../../favorites/components/button/button.tsx';
-import {changeFavoriteStatus, updateFavoriteInFavorites} from '../../../../store/slices/favorites.ts';
+import { changeFavoriteStatus, updateFavoriteInFavorites } from '../../../../store/slices/favorites.ts';
 import { updateFavoriteInOffersList } from '../../../../store/slices/offer.ts';
-import { LoginStatus } from '../../../../constant.ts';
+import { LoginStatus, RATING_MULTIPLIER, RoutePath } from '../../../../constant.ts';
 import { updateFavoriteInDetails } from '../../../../store/slices/details.ts';
+import { FAVORITE_STATUS } from '../../../../store/types.ts';
 
 type OfferCardProps = {
   offer: Offer;
@@ -22,15 +23,17 @@ export default function OfferCard({ offer, onHover }: OfferCardProps): JSX.Eleme
   const navigate = useNavigate();
   const authorizationStatus = useSelector((state: RootState) => state.user.authorizationStatus);
 
-  const onFavoriteClick = async () => {
+  const handleFavoriteClick = async () => {
     if (authorizationStatus !== LoginStatus.Auth) {
-      navigate('/login');
+      navigate(RoutePath.Login);
       return;
     }
 
-    const newStatus = isFavorite ? 0 : 1;
+    const newStatus = isFavorite ? FAVORITE_STATUS.REMOVE : FAVORITE_STATUS.ADD;
 
-    const updatedOffer = await dispatch(changeFavoriteStatus({ offerId: id, status: newStatus })).unwrap();
+    const updatedOffer = await dispatch(
+      changeFavoriteStatus({ offerId: id, status: newStatus })
+    ).unwrap();
 
     dispatch(updateFavoriteInOffersList(updatedOffer));
     dispatch(updateFavoriteInFavorites(updatedOffer));
@@ -67,20 +70,20 @@ export default function OfferCard({ offer, onHover }: OfferCardProps): JSX.Eleme
           </div>
           <FavoriteButton
             isFavorite={isFavorite}
-            onFavoriteButtonClick={onFavoriteClick}
+            onFavoriteButtonClick={handleFavoriteClick}
             environment={FavoritesEnvironment.Card}
           />
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{width: `${Math.round(rating) * 20}%`}}></span>
+            <span style={{ width: `${Math.round(rating) * RATING_MULTIPLIER}%` }}></span>
             <span className="visually-hidden">Rating</span>
           </div>
         </div>
         <h2 className="place-card__name">
           <Link to={`/offer/${id}`}>{title}</Link>
         </h2>
-        <p className="place-card__type">{type}</p>
+        <p className="place-card__type">{type.charAt(0).toUpperCase() + type.slice(1)}</p>
       </div>
     </article>
   );

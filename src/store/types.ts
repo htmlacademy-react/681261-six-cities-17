@@ -3,7 +3,12 @@ export type UserLoginPayload = {
   password: string;
 }
 
+export enum FAVORITE_STATUS {
+  ADD = 1,
+  REMOVE = 0,
+}
+
 export type ChangeFavoriteStatusPayload = {
   offerId: string;
-  status: 1 | 0;
+  status: FAVORITE_STATUS;
 }

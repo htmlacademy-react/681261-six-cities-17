@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { AxiosInstance } from 'axios';
-import { LoginStatus } from '../../constant';
+import {LoginStatus, RoutePath} from '../../constant';
 import { UserInfo } from '../../types';
 import { saveToken, dropToken } from '../../services/token';
 import { UserLoginPayload } from '../types.ts';
@@ -29,7 +29,7 @@ export const logoutAction = createAsyncThunk<void, void, { extra: AxiosInstance 
 export const login = createAsyncThunk<UserInfo, void, { extra: AxiosInstance }>(
   'user/checkAuth',
   async (_, { extra: api }) => {
-    const { data } = await api.get<UserInfo>('/login');
+    const { data } = await api.get<UserInfo>(RoutePath.Login);
     return data;
   }
 );

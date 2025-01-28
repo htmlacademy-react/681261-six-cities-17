@@ -1,11 +1,18 @@
+import { useAppDispatch } from '../../hooks/use-dispatch.ts';
+import { useNavigate } from 'react-router-dom';
+import { changeCity } from '../../store/slices/city.ts';
 import Card from './components/card/card.tsx';
 import { Offer } from '../../types.ts';
+import { RoutePath } from '../../constant.ts';
 
 type FavoritesListProps = {
   offers: Offer[];
 };
 
 export default function Favorites({ offers }: FavoritesListProps) {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   const groupedOffers = offers.reduce<Record<string, Offer[]>>((acc, offer) => {
     if (!acc[offer.city.name]) {
       acc[offer.city.name] = [];
@@ -13,6 +20,11 @@ export default function Favorites({ offers }: FavoritesListProps) {
     acc[offer.city.name].push(offer);
     return acc;
   }, {});
+
+  const handleCityClick = (city: string) => {
+    dispatch(changeCity(city));
+    navigate(RoutePath.Main);
+  };
 
   return (
     <section className="favorites">
@@ -22,7 +34,11 @@ export default function Favorites({ offers }: FavoritesListProps) {
           <li className="favorites__locations-items" key={city}>
             <div className="favorites__locations locations locations--current">
               <div className="locations__item">
-                <a className="locations__item-link" href="#">
+                <a
+                  className="locations__item-link"
+                  onClick={() => handleCityClick(city)}
+                  role="button"
+                >
                   <span>{city}</span>
                 </a>
               </div>
