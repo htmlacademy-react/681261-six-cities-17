@@ -6,11 +6,11 @@ import FavoriteButton from '../button/button.tsx';
 import { FavoritesEnvironment } from '../../types.ts';
 import { changeFavoriteStatus } from '../../../../store/slices/favorites.ts';
 import { updateFavoriteInFavorites } from '../../../../store/slices/favorites.ts';
-import { LoginStatus } from '../../../../constant.ts';
+import {LoginStatus, RoutePath} from '../../../../constant.ts';
 import { RootState } from '../../../../store';
 import { updateFavoriteInOffersList } from '../../../../store/slices/offer.ts';
 import { updateFavoriteInDetails } from '../../../../store/slices/details.ts';
-import {FAVORITE_STATUS} from "../../../../store/types.ts";
+import { FAVORITE_STATUS } from '../../../../store/types.ts';
 
 type FavoritesCardProps = {
   offer: Offer;
@@ -23,7 +23,7 @@ export default function Card({ offer }: FavoritesCardProps) {
 
   const handleFavoriteButtonClick = async () => {
     if (authorizationStatus !== LoginStatus.Auth) {
-      navigate('/login');
+      navigate(RoutePath.Login);
       return;
     }
 

@@ -13,7 +13,7 @@ import Map from '../../components/map/map.tsx';
 import OfferList from '../../components/offer-list/offer-list.tsx';
 import OfferGallery from '../../components/offer-gallery/offer-gallery.tsx';
 
-import { ADULT_TEXT, LoginStatus, RATING_MULTIPLIER, ROOM_TEXT } from '../../constant.ts';
+import {ADULT_TEXT, LoginStatus, RATING_MULTIPLIER, ROOM_TEXT, RoutePath} from '../../constant.ts';
 
 import { fetchNearbyOffers, fetchOfferDetails } from '../../store/slices/details.ts';
 import { fetchOfferComments, sendComment } from '../../store/slices/comments.ts';
@@ -67,7 +67,7 @@ export default function OfferPage(): JSX.Element {
 
   const handleFavoriteClick = async () => {
     if (authorizationStatus !== LoginStatus.Auth) {
-      navigate('/login');
+      navigate(RoutePath.Login);
       return;
     }
 

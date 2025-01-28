@@ -7,9 +7,9 @@ import { FavoritesEnvironment } from '../../../favorites/types.ts';
 import FavoriteButton from '../../../favorites/components/button/button.tsx';
 import { changeFavoriteStatus, updateFavoriteInFavorites } from '../../../../store/slices/favorites.ts';
 import { updateFavoriteInOffersList } from '../../../../store/slices/offer.ts';
-import {LoginStatus, RATING_MULTIPLIER} from '../../../../constant.ts';
+import { LoginStatus, RATING_MULTIPLIER, RoutePath } from '../../../../constant.ts';
 import { updateFavoriteInDetails } from '../../../../store/slices/details.ts';
-import {FAVORITE_STATUS} from "../../../../store/types.ts";
+import { FAVORITE_STATUS } from '../../../../store/types.ts';
 
 type OfferCardProps = {
   offer: Offer;
@@ -25,7 +25,7 @@ export default function OfferCard({ offer, onHover }: OfferCardProps): JSX.Eleme
 
   const handleFavoriteClick = async () => {
     if (authorizationStatus !== LoginStatus.Auth) {
-      navigate('/login');
+      navigate(RoutePath.Login);
       return;
     }
 
